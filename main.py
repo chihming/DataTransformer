@@ -78,10 +78,11 @@ def main():
                               c_columns=CONFIG.CategoricalColumn,
                               n_columns=CONFIG.NumericColumn)
 
-        logger.info("Output result to '%s'" % (CONFIG.OutputFileName))
-        file_out = open(CONFIG.OutputFileName, 'wb')
-        file_out.write('\n'.join(dataout))
-        file_out.close()
+        for e, out in enumerate(dataout):
+            logger.info("Output result to '%s'" % (CONFIG.OutputFileName[e]))
+            file_out = open(CONFIG.OutputFileName[e], 'wb')
+            file_out.write('\n'.join(out))
+            file_out.close()
 
     elif CONFIG.Task == 'csv2rel':
         datamapTrain, datamapTest, dataout = DC.CSVtoRel(infile=CONFIG.InputFileName,
@@ -133,15 +134,17 @@ if __name__ == '__main__':
         exit()
 
     if CONFIG.InputFileName is not None:
-        logger.info("Input File Name: '%s'" % CONFIG.InputFileName)
+        CONFIG.InputFileName = CONFIG.InputFileName.split(',')
+        logger.info("Input File: %s" % (CONFIG.InputFileName))
     else:
-        logger.error("Please Specify Input File Name")
+        logger.error("Please specify input files splitted by ','")
         exit()
 
     if CONFIG.OutputFileName is not None:
-        logger.info("Output File Name: '%s'" % CONFIG.OutputFileName)
+        CONFIG.OutputFileName = CONFIG.OutputFileName.split(',')
+        logger.info("Output File: %s" % (CONFIG.OutputFileName))
     else:
-        logger.error("Please Specify Output File Name")
+        logger.error("Please specify output files splitted by ','")
         exit()
 
     if CONFIG.Task == 'csv2rel':
@@ -156,13 +159,6 @@ if __name__ == '__main__':
         else:
             logger.warning("Default Relational Target Column: '0'")
             CONFIG.RTargetColumn = 0
-
-        if "," in CONFIG.InputFileName:
-            CONFIG.InputFileName = CONFIG.InputFileName.split(',')
-            logger.info("Train File: %s, Test File: %s" % (CONFIG.InputFileName[0], CONFIG.InputFileName[1]))
-        else:
-            logger.error("Please specify train & test files with ','")
-            exit()
 
     if CONFIG.TargetColumn is not None:
         logger.info("Target Column: '%d'" % (CONFIG.TargetColumn))
