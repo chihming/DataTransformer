@@ -47,8 +47,7 @@ It's able to get a converted data with libSVM-like format.
 ```
 
 ## CSV Data with Multiple Labels
-Suppose there is a feature containing multiple labels, saying **Movie A** is belong to **Comedy** and **Romance**.
-The dataset may looks like this:
+Suppose there is a feature containing multiple labels, as the shown in follows (Genre):
 ```csv
 rating::user::item::age::Genre
 9::userA::itemA::18::Comedy|Drama
