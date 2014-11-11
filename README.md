@@ -21,6 +21,7 @@ python main.py --help
 * **csv2rel** -- convert **csv** data into **relational** data format
 
 ## TODO Task
+* **dsplit** -- split data into train/test according to specified parameters
 * **lib2rel** -- convert libSVM-like data into relational data format
 * **csv2vw** -- convert csv data into [Vowpal Wabbit](https://github.com/JohnLangford/vowpal_wabbit) (VW) data format
 * **lib2vw** -- convert libSVM-like dataformat into VW format
