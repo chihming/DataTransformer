@@ -6,7 +6,7 @@ A simple tool for converting csv data into [libSVM](http://www.csie.ntu.edu.tw/~
 python main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
 ```
 
-It supports [pypy](http://pypy.org/) as well. (a faster executoin way)
+It supports [pypy](http://pypy.org/) as well. (a faster way for executoin)
 ```python
 pypy main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
 ```
