@@ -12,7 +12,9 @@ PARSER.add_argument('-task', "--Task", default=None,
 PARSER.add_argument('-labels', "--Labels", default=None,
                     help="Specify labels for splitting data")
 PARSER.add_argument('-target', "--TargetColumn", type=int, default=None,
-                    help="Target column for prediction.")
+                    help="Target column for input data.")
+PARSER.add_argument('-rtarget', "--RTargetColumn", type=int, default=None,
+                    help="Target column for rlational data.")
 PARSER.add_argument('-cat', "--CategoricalColumn", default=None,
                     help="Categorical columns for encoding.")
 PARSER.add_argument('-num', "--NumericColumn", default=None,
@@ -23,6 +25,8 @@ PARSER.add_argument('-infile', "--InputFileName", default=None,
                     help="Input File Name")
 PARSER.add_argument('-outfile', "--OutputFileName", default=None,
                     help="Output File Name")
+PARSER.add_argument('-relfile', "--RelationalFileName", default=None,
+                    help="Relational File Name")
 
 PARSER.add_argument('-header', "--Header", type=int, default=None,
                     help="With header or not")
@@ -80,8 +84,32 @@ def main():
         file_out.close()
 
     elif CONFIG.Task == 'csv2rel':
-        logger.error("Not supported for now")
-        pass
+        datamapTrain, datamapTest, dataout = DC.CSVtoRel(infile=CONFIG.InputFileName,
+                                                         relfile=CONFIG.RelationalFileName,
+                                                         target_column=CONFIG.TargetColumn,
+                                                         rtarget_column=CONFIG.RTargetColumn,
+                                                         sep=CONFIG.Separtor,
+                                                         msep=CONFIG.MutiLabelSepartor,
+                                                         offset=CONFIG.Offset,
+                                                         header=CONFIG.Header,
+                                                         labels=CONFIG.Labels,
+                                                         c_columns=CONFIG.CategoricalColumn,
+                                                         n_columns=CONFIG.NumericColumn)
+
+        logger.info("Output result to '%s'" % (CONFIG.OutputFileName))
+        file_out = open(CONFIG.OutputFileName, 'wb')
+        file_out.write('\n'.join(dataout))
+        file_out.close()
+
+        logger.info("Output result to '%s'" % (CONFIG.OutputFileName + '.train'))
+        file_out = open(CONFIG.OutputFileName + '.train', 'wb')
+        file_out.write('\n'.join(datamapTrain))
+        file_out.close()
+
+        logger.info("Output result to '%s'" % (CONFIG.OutputFileName + '.test'))
+        file_out = open(CONFIG.OutputFileName + '.test', 'wb')
+        file_out.write('\n'.join(datamapTest))
+        file_out.close()
 
     else:
         logger.error("Unknow Task")
@@ -115,6 +143,26 @@ if __name__ == '__main__':
     else:
         logger.error("Please Specify Output File Name")
         exit()
+
+    if CONFIG.Task == 'csv2rel':
+        if CONFIG.RelationalFileName is not None:
+            logger.info("Relational File: '%s'" % CONFIG.RelationalFileName)
+        else:
+            logger.error("Please specify corresponding relational data")
+            exit()
+
+        if CONFIG.RTargetColumn is not None:
+            logger.info("Relational Target Column: '%d'" % (CONFIG.RTargetColumn))
+        else:
+            logger.warning("Default Relational Target Column: '0'")
+            CONFIG.RTargetColumn = 0
+
+        if "," in CONFIG.InputFileName:
+            CONFIG.InputFileName = CONFIG.InputFileName.split(',')
+            logger.info("Train File: %s, Test File: %s" % (CONFIG.InputFileName[0], CONFIG.InputFileName[1]))
+        else:
+            logger.error("Please specify train & test files with ','")
+            exit()
 
     if CONFIG.TargetColumn is not None:
         logger.info("Target Column: '%d'" % (CONFIG.TargetColumn))
@@ -156,7 +204,6 @@ if __name__ == '__main__':
     else:
         logger.info("Offset: '1' (index start from 0)")
         CONFIG.Offset = 1
-
 
     logger.info("Task Start")
     main()

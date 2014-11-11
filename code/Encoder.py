@@ -1,6 +1,3 @@
-from collections import Counter
-import math
-
 class Encoder:
 
     def __init__(self):
