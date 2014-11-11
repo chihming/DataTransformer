@@ -38,9 +38,9 @@ It's able to get a converted data with libSVM-like format.
 5 2:1 4:1 5:29
 ```
 
-Demo on [Movielens 1M](http://grouplens.org/datasets/movielens/) dataset
+Demo on [Movielens 1M/10M](http://grouplens.org/datasets/movielens/) dataset
 ======
 Generate pure **User-Item** matrix in libSVM-like format:
-```
+```python
 python main.py -task 'csv2lib' -infile ml-1m/ratings.dat -outfile [Outputfile] -sep '::' -target 2 -cat 0,1 -header 0
 ```
