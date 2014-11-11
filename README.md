@@ -18,7 +18,7 @@ For more details, plase refer to `--help` function.
 python main.py --help
 ```
 
-An Example
+A Simple Example
 ======
 For a csv data:
 ```csv
@@ -36,4 +36,11 @@ It's able to get a converted data with libSVM-like format.
 9 1:1 3:1 5:18
 4 1:1 4:1 5:16
 5 2:1 4:1 5:29
+```
+
+Demo on [Movielens 1M](http://grouplens.org/datasets/movielens/) dataset
+======
+Generate pure **User-Item** matrix in libSVM-like format:
+```
+python main.py -task 'csv2lib' -infile ml-1m/ratings.dat -outfile [Outputfile] -sep '::' -target 2 -cat 0,1 -header 0
 ```
