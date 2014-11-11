@@ -18,7 +18,14 @@ python main.py --help
 
 ## Supported Task
 * **csv2lib** -- convert csv data into libSVM-like data format
-* **csv2rel** -- convert csv data into relational data format (not yet completed)
+
+## TODO Task
+* **csv2rel** -- convert csv data into relational data format
+* **lib2rel** -- convert libSVM-like data into relational data format
+* **csv2vw** -- convert csv data into [Vowpal Wabbit](https://github.com/JohnLangford/vowpal_wabbit)(VW) data format
+* **lib2vw** -- convert libSVM-like dataformat into VW format
+* **vw2lib** -- convert VW dataformat into libSVM-like format
+
 
 ## A Simple Example
 For a csv data:
