@@ -73,7 +73,7 @@ It's able to get [OutputFile].train and [OutputFile].test. For instance:
 ```
 
 ## CSV training data, CSV testing data -> libSVM-like data
-Given [InputFiles] (e.g. [InputFile].train,[InputFile].test )
+Given **[InputFiles]** e.g. [InputFile].train,[InputFile].test
 
 By using instructions:
 * `-task 'csv2lib'`: convert data to libSVM-like format
