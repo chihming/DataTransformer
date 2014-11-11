@@ -28,7 +28,7 @@ python main.py --help
 * **vw2lib** -- convert VW dataformat into libSVM-like format
 
 
-## CSV Data -> CSV training data, CSV testing data
+## CSV Data -> CSV training data + CSV testing data
 Given an **[InputFile]** csv data:
 ```csv
 rating::user::movie::time
@@ -72,7 +72,7 @@ It's able to get [OutputFile].train and [OutputFile].test. For instance:
 7::userD::movieC::11
 ```
 
-## CSV training data, CSV testing data -> libSVM-like data
+## CSV training/testing data -> libSVM-like data
 Given **[InputFiles]** e.g. [InputFile].train,[InputFile].test
 
 By using instructions:
@@ -123,7 +123,7 @@ It's able to get **[Outputfile]** in libSVM-like format:
 5 2:1 4:1 5:29 8:0.33 6:0.33 7:0.33
 ```
 
-## CSV training data, CSV testing data -> libFM relational data
+## CSV training/testing data -> libFM relational data
 Given the **[RelationalFile]** movie profile:
 ```csv
 movie::Genre
