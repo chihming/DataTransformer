@@ -28,7 +28,7 @@ python main.py --help
 
 
 ## CSV Data -> libSVM-like Data
-For a csv data:
+Given an [InputFile] csv data:
 ```csv
 rating::user::item::age
 9::userA::itemA::18
@@ -39,7 +39,7 @@ By using following instruction:
 ```python
 python main.py -task 'csv2lib' -infile [InputFile] -ofile [Outputfile] -target 0 -cat 1,2 -num 3 -sep '::' -head 1
 ```
-It's able to get a converted data with libSVM-like format.
+It's able to get a [Outputfile] converted data with libSVM-like format.
 ```csv
 9 1:1 3:1 5:18
 4 1:1 4:1 5:18
@@ -47,7 +47,7 @@ It's able to get a converted data with libSVM-like format.
 ```
 
 ## CSV Data with Multiple Labels -> libSVM-like Data
-Suppose there is a feature containing multiple labels, as the shown in follows (Genre):
+Given an [InputFile] csv data with multi-labeled *Genre* feature:
 ```csv
 rating::user::item::age::Genre
 9::userA::itemA::18::Comedy|Drama
@@ -58,7 +58,7 @@ By using `--msep` instruction:
 ```python
 python main.py -task 'csv2lib' -infile [InputFile] -ofile [Outputfile] -target 0 -cat 1,2,4 -num 3 -sep '::' -msep '|' -head 1
 ```
-It's able to get:
+It's able to get [Outputfile] in libSVM-like format:
 ```
 9 1:1 3:1 5:18 6:0.5 7:0.5
 4 1:1 4:1 5:18 8:0.33 6:0.33 7:0.33
@@ -66,21 +66,20 @@ It's able to get:
 ```
 
 ## CSV Data -> Relational Data
-Suppose we'd like to convert user csv data to user relational data.
-Training data:
+Given [TrainFile]:
 ```csv
 rating::user::item
 9::userA::itemA
 4::userA::itemB
 5::userB::itemB
 ```
-Testing data:
+, [TestFile]:
 ```csv
 rating::user::item
 8::userB::itemA
 4::userC::itemB
 ```
-And the user profile is:
+and the [RelationalFile] user profile:
 ```csv
 user::gender::age
 userA::M::18
@@ -89,16 +88,15 @@ userC::M::29
 ```
 By using following instructions:
 ```python
-python main.py -task 'csv2rel' -infile [TrainFile],[TestFile] -target 0 -ofile [Outputfile] -rtarget 0 -cat 1,2,4 -num 3 -sep '::' -msep '|' -head 1
+python main.py -task 'csv2rel' -infile [TrainFile],[TestFile] -target 0 -ofile [Outputfile] -rel [RelationalFile] -rtarget 0 -cat 1,2,4 -num 3 -sep '::' -msep '|' -head 1
 ```
-We get ...
-One [Outputfile]*.train* file:
+We get one [Outputfile].train file:
 ```csv
 0
 0
 1
 ```
-One [Outputfile]*.test* file:
+One [Outputfile].test file:
 ```csv
 1
 2
