@@ -29,7 +29,7 @@ rating::user::item::age
 ```
 By using following instruction: 
 ```python
-python main.py -task 'csv2lib' -infile [InputFile] -ofile [Outputfile] -target 0 -cat 1,2 -num 3 -sep '::'
+python main.py -task 'csv2lib' -infile [InputFile] -ofile [Outputfile] -target 0 -cat 1,2 -num 3 -sep '::' -head 1
 ```
 It's able to get a converted data with libSVM-like format.
 ```csv
