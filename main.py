@@ -3,7 +3,11 @@ from datetime import datetime
 from code.DataConverter import DataConverter
 
 # Arguments
-PARSER = argparse.ArgumentParser(description="Parameters for the script.")
+PARSER = argparse.ArgumentParser(description="Parameters for the script.",
+                                 usage="python main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]")
+
+PARSER.add_argument('-task', "--Task", default=None,
+                    help="Specify the task. Options: 'csv2lib', 'csv2rel'")
 
 # Header for splitting data
 PARSER.add_argument('-labels', "--Labels", default=None,
@@ -55,18 +59,27 @@ logger = logging.getLogger( __name__ )
 def main():
     DC = DataConverter(logger)
 
-    dataout = DC.CSVtolib(infile=CONFIG.InputFileName,
-                          target_column=CONFIG.TargetColumn,
-                          sep=CONFIG.Separtor,
-                          header=CONFIG.Header,
-                          labels=CONFIG.Labels,
-                          c_columns=CONFIG.CategoricalColumn,
-                          n_columns=CONFIG.NumericColumn)
 
-    logger.info("Output result to '%s'" % (CONFIG.OutputFileName))
-    file_out = open(CONFIG.OutputFileName, 'wb')
-    file_out.write('\n'.join(dataout))
-    file_out.close()
+    if CONFIG.Task == 'csv2lib':
+        dataout = DC.CSVtolib(infile=CONFIG.InputFileName,
+                              target_column=CONFIG.TargetColumn,
+                              sep=CONFIG.Separtor,
+                              header=CONFIG.Header,
+                              labels=CONFIG.Labels,
+                              c_columns=CONFIG.CategoricalColumn,
+                              n_columns=CONFIG.NumericColumn)
+
+        logger.info("Output result to '%s'" % (CONFIG.OutputFileName))
+        file_out = open(CONFIG.OutputFileName, 'wb')
+        file_out.write('\n'.join(dataout))
+        file_out.close()
+
+    elif CONFIG.Task == 'csv2rel':
+        logger.error("Not supported for now")
+        pass
+
+    else:
+        logger.error("Unknow Task")
 
 
 # ----------------------
@@ -78,7 +91,14 @@ if __name__ == '__main__':
     """
 
     logger.info("Arguments Check")
-    
+
+    if CONFIG.Task is not None:
+        logger.info("Task: '%s'" % CONFIG.Task)
+    else:
+        logger.error("Please Specify the Task.")
+        logger.error("Options: 'csv2lib', 'csv2rel'")
+        exit()
+
     if CONFIG.InputFileName is not None:
         logger.info("Input File Name: '%s'" % CONFIG.InputFileName)
     else:
