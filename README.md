@@ -6,7 +6,7 @@ A simple tool for converting csv data into [libSVM](http://www.csie.ntu.edu.tw/~
 python main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
 ```
 
-To speed up data processing, it supports [pypy](http://pypy.org/) as well. 
+It supports [pypy](http://pypy.org/) as well. (a faster executoin way)
 ```python
 pypy main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
 ```
@@ -59,7 +59,6 @@ It's able to get [OutputFile].train and [OutputFile].test. For instance:
 
 **[OutputFile].train**
 ```csv
-rating::user::movie::time
 9::userA::movieA::5
 4::userA::movieB::10
 5::userB::movieB::3
@@ -69,7 +68,6 @@ rating::user::movie::time
 ```
 **[OutputFile].test**
 ```csv
-rating::user::movie::time
 4::userB::movieC::8
 7::userD::movieC::11
 ```
@@ -85,10 +83,10 @@ By using instructions:
 * `-cat 1,2`: categorical encoding on columns 1,2
 * `-num 3`: numerical encoding on column 3
 * `-sep '::'`: split data by '::'
-* `-header 1`: skip header
+* `-header 0`: no header
 
 ```python
-python main.py -task 'csv2lib' -infile [InputFile].train,[InputFile].test -outfile [OutputFile].train,[OutputFile].test -target 0 -cat 1,2 -num 3 -sep '::' -header 1
+python main.py -task 'csv2lib' -infile [InputFile].train,[InputFile].test -outfile [OutputFile].train,[OutputFile].test -target 0 -cat 1,2 -num 3 -sep '::' -header 0
 ```
 
 It's able to get the **[Outputfile].train**
