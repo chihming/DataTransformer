@@ -47,7 +47,8 @@ It's able to get a converted data with libSVM-like format.
 ```
 
 ## CSV Data with Multiple Labels
-Suppose there is a feature containing multiple labels, saying Movie A is belong to Comedy and Romance. The dataset may looks like this:
+Suppose there is a feature containing multiple labels, saying **Movie A** is belong to **Comedy** and **Romance**.
+The dataset may looks like this:
 ```csv
 rating::user::item::age::Genre
 9::userA::itemA::18::Comedy|Drama
@@ -56,13 +57,13 @@ rating::user::item::age::Genre
 ```
 By using `--msep` instruction:
 ```python
-python main.py -task 'csv2lib' -infile [InputFile] -ofile [Outputfile] -target 0 -cat 1,2,4 -num 3 -sep '::' -msep '|' -head 1
+python main.py -task 'csv2lib' -infile [InputFile] -ofile [Outputfile] -target 0 -cat 1,2,4 -num 3 -sep '::' **-msep '|'** -head 1
 ```
 It's able to get:
 ```
-9 1:1 3:1 5:18 6:0.5 7:0.5
-4 1:1 4:1 5:16 8:0.33 6:0.33 7:0.33
-5 2:1 4:1 5:29 10:1
+9 1:1 3:1 5:18 **6:0.5 7:0.5**
+4 1:1 4:1 5:16 **8:0.33 6:0.33 7:0.33**
+5 2:1 4:1 5:29 **10:1**
 ```
 
 ## Demo on [Movielens 1M/10M](http://grouplens.org/datasets/movielens/) dataset
