@@ -57,7 +57,7 @@ class Encoder:
         if msep:
             for fea_vec in fea_matrix:
                 feas = fea_vec.split(msep)
-                weight = 1./len(feas)
+                weight = 2./len(feas)
                 out = ["%d:%f" % (self.keymap["%s %s" % (label, fea)], weight) for fea in feas]
                 dataout.append(" ".join(out))
         else:

@@ -1,4 +1,5 @@
 from code.Encoder import Encoder
+from random import shuffle
 
 class DataConverter:
     logger = None
@@ -7,6 +8,40 @@ class DataConverter:
     def __init__(self, logger):
         self.logger = logger
         pass
+
+    def SplitData(self, infile, target_column, sep, header, ratio):
+        """
+        Split data into training / testinf data
+        """
+        self.logger.info("Load data")
+        data = [ line.rstrip().split(sep) for line in open(infile[0]) ]
+
+        self.logger.info("split target")
+        target_unique = list( set(zip(*(data))[target_column]) )
+        shuffle(target_unique)
+        cut_off = int( len(target_unique) * float(ratio[0]) )
+        target_train = { t:1 for t in target_unique[:cut_off] }
+        #target_test = { t:1 for t in target_unique[cut_off:] }
+        self.logger.info("total targets: %d, train targets: %d" % (len(target_unique), len(target_unique) * float(ratio[0])))
+
+        self.logger.info("split data")
+        datamap = { target:[] for target in target_unique }
+        dataoutTrain = []
+        dataoutTest = []
+        for d in data:
+            datamap[d[target_column]].append(d)
+        for target in datamap:
+            if target in target_train:
+                for d in datamap[target]:
+                    dataoutTrain.append(sep.join(d))
+            else:
+                cut_off = int( len(datamap[target]) * float(ratio[2]) )
+                for d in datamap[target][:cut_off]:
+                    dataoutTrain.append(sep.join(d))
+                for d in datamap[target][cut_off:]:
+                    dataoutTest.append(sep.join(d))
+
+        return dataoutTrain, dataoutTest
     
     def CSVtoLib(self, infile, target_column, sep, msep, offset, header, labels, c_columns, n_columns):
         """

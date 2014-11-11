@@ -19,6 +19,8 @@ PARSER.add_argument('-cat', "--CategoricalColumn", default=None,
                     help="Categorical columns for encoding.")
 PARSER.add_argument('-num', "--NumericColumn", default=None,
                     help="Numeric column for encoding.")
+PARSER.add_argument('-ratio', "--Ratio", default=None,
+                    help="param for splitting data")
 
 # files
 PARSER.add_argument('-infile', "--InputFileName", default=None,
@@ -66,8 +68,20 @@ logger = logging.getLogger( __name__ )
 def main():
     DC = DataConverter(logger)
 
+    if CONFIG.Task == 'dsplit':
+        dataout = DC.SplitData(infile=CONFIG.InputFileName,
+                               target_column=CONFIG.TargetColumn,
+                               sep=CONFIG.Separtor,
+                               header=CONFIG.Header,
+                               ratio=CONFIG.Ratio)
 
-    if CONFIG.Task == 'csv2lib':
+        for e, out in enumerate(dataout):
+            logger.info("Output result to '%s'" % (CONFIG.OutputFileName[e]))
+            file_out = open(CONFIG.OutputFileName[e], 'wb')
+            file_out.write('\n'.join(out))
+            file_out.close()
+
+    elif CONFIG.Task == 'csv2lib':
         dataout = DC.CSVtoLib(infile=CONFIG.InputFileName,
                               target_column=CONFIG.TargetColumn,
                               sep=CONFIG.Separtor,
@@ -200,6 +214,14 @@ if __name__ == '__main__':
     else:
         logger.info("Offset: '1' (index start from 0)")
         CONFIG.Offset = 1
+
+    if CONFIG.Ratio is not None:
+        CONFIG.Ratio = CONFIG.Ratio.split(',')
+        logger.info("Ratio: '%s'" % (CONFIG.Ratio))
+    else:
+        logger.warning("Default ratio: '0.8,0.2,0.5'")
+        CONFIG.Ratio = '0.8,0.2,0.5'.split(',')
+
 
     logger.info("Task Start")
     main()
