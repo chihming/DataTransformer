@@ -46,6 +46,8 @@ PARSER.add_argument('-alpha', "--alpha", type=float, default=0.5,
                     help="Parameter of cosine similarity.")
 PARSER.add_argument('-topk', "--topk", type=int, default=10,
                     help="Get top-k similarities.")
+PARSER.add_argument('-offset', "--Offset", default=None,
+                    help="Encoding offset")
 
 PARSER.set_defaults(argument_default=False)
 CONFIG = PARSER.parse_args()
@@ -66,6 +68,7 @@ def main():
                               target_column=CONFIG.TargetColumn,
                               sep=CONFIG.Separtor,
                               msep=CONFIG.MutiLabelSepartor,
+                              offset=CONFIG.Offset,
                               header=CONFIG.Header,
                               labels=CONFIG.Labels,
                               c_columns=CONFIG.CategoricalColumn,
@@ -147,6 +150,12 @@ if __name__ == '__main__':
         CONFIG.NumericColumn = [ int(c) for c in CONFIG.NumericColumn.split(',') ]
     else:
         CONFIG.NumericColumn = []
+
+    if CONFIG.Offset is not None:
+        logger.info("Offset: '%s' (index starts from %s)" % (CONFIG.Offset, CONFIG.Offset))
+    else:
+        logger.info("Offset: '1' (index start from 0)")
+        CONFIG.Offset = 1
 
 
     logger.info("Task Start")

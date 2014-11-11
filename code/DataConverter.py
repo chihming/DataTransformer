@@ -3,19 +3,20 @@ from code.Encoder import Encoder
 class DataConverter:
     logger = None
     encoder = Encoder()
-    label_index = 0
 
     def __init__(self, logger):
         self.logger = logger
         pass
     
-    def CSVtoLib(self, infile, target_column, sep, msep, header, labels, c_columns, n_columns):
+    def CSVtoLib(self, infile, target_column, sep, msep, offset, header, labels, c_columns, n_columns):
         """
         Convert CSV data to libSVM/libFM format
         """
-        target = []
-        
+
+        self.encoder.set_offset(offset)
+
         self.logger.info("Load data")
+        target = []
         data = [ line.rstrip().split(sep) for line in open(infile) ]
         dim = len(data[0])
         

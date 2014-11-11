@@ -3,10 +3,13 @@ import math
 
 class Encoder:
 
-    def __init__(self, idx_offset=1):
-        self.idx = idx_offset
+    def __init__(self):
+        self.idx = 0
         self.keymap = {}
         self.label_len = {}
+
+    def set_offset(self, offset):
+        self.idx = int(offset)
 
     def get_max_index(self):
         return self.idx
