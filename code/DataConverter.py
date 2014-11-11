@@ -91,7 +91,6 @@ class DataConverter:
 
         return dataout
 
-
     def CSVtoRel(self, infile, relfile, target_column, rtarget_column, sep, msep, offset, header, labels, c_columns, n_columns):
         """
         Convert data to relational data format
@@ -134,5 +133,5 @@ class DataConverter:
 
         dataout = [ "%s" % (" ".join(cdata)) for cdata in zip(*converted) ]
 
-        return datamapTrain, datamapTest, dataout
+        return dataout, datamapTrain, datamapTest
 

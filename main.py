@@ -99,31 +99,31 @@ def main():
             file_out.close()
 
     elif CONFIG.Task == 'csv2rel':
-        datamapTrain, datamapTest, dataout = DC.CSVtoRel(infile=CONFIG.InputFileName,
-                                                         relfile=CONFIG.RelationalFileName,
-                                                         target_column=CONFIG.TargetColumn,
-                                                         rtarget_column=CONFIG.RTargetColumn,
-                                                         sep=CONFIG.Separtor,
-                                                         msep=CONFIG.MutiLabelSepartor,
-                                                         offset=CONFIG.Offset,
-                                                         header=CONFIG.Header,
-                                                         labels=CONFIG.Labels,
-                                                         c_columns=CONFIG.CategoricalColumn,
-                                                         n_columns=CONFIG.NumericColumn)
+        dataout = DC.CSVtoRel(infile=CONFIG.InputFileName,
+                                     relfile=CONFIG.RelationalFileName,
+                                     target_column=CONFIG.TargetColumn,
+                                     rtarget_column=CONFIG.RTargetColumn,
+                                     sep=CONFIG.Separtor,
+                                     msep=CONFIG.MutiLabelSepartor,
+                                     offset=CONFIG.Offset,
+                                     header=CONFIG.Header,
+                                     labels=CONFIG.Labels,
+                                     c_columns=CONFIG.CategoricalColumn,
+                                     n_columns=CONFIG.NumericColumn)
 
-        logger.info("Output result to '%s'" % (CONFIG.OutputFileName))
-        file_out = open(CONFIG.OutputFileName, 'wb')
-        file_out.write('\n'.join(dataout))
+        logger.info("Output result to '%s'" % (CONFIG.OutputFileName[0]))
+        file_out = open(CONFIG.OutputFileName[0], 'wb')
+        file_out.write('\n'.join(dataout[0]))
         file_out.close()
 
-        logger.info("Output result to '%s'" % (CONFIG.OutputFileName + '.train'))
-        file_out = open(CONFIG.OutputFileName + '.train', 'wb')
-        file_out.write('\n'.join(datamapTrain))
+        logger.info("Output result to '%s'" % (CONFIG.OutputFileName[0] + '.train'))
+        file_out = open(CONFIG.OutputFileName[0] + '.train', 'wb')
+        file_out.write('\n'.join(dataout[1]))
         file_out.close()
 
-        logger.info("Output result to '%s'" % (CONFIG.OutputFileName + '.test'))
-        file_out = open(CONFIG.OutputFileName + '.test', 'wb')
-        file_out.write('\n'.join(datamapTest))
+        logger.info("Output result to '%s'" % (CONFIG.OutputFileName[0] + '.test'))
+        file_out = open(CONFIG.OutputFileName[0] + '.test', 'wb')
+        file_out.write('\n'.join(dataout[2]))
         file_out.close()
 
     else:
