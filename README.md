@@ -105,7 +105,7 @@ and the **[Outputfile].train**
 ```
 
 ## For Multi-labeled Features
-Given an [InputFile] csv data with multi-labeled *Genre* feature:
+Given an **[InputFile]** csv data with multi-labeled *Genre* feature:
 ```csv
 rating::user::item::age::Genre
 9::userA::itemA::18::Comedy|Drama
@@ -116,7 +116,7 @@ By using `--msep` instruction:
 ```python
 python main.py -task 'csv2lib' -infile [InputFile] -ofile [Outputfile] -target 0 -cat 1,2,4 -num 3 -sep '::' -msep '|' -head 1
 ```
-It's able to get [Outputfile] in libSVM-like format:
+It's able to get **[Outputfile]** in libSVM-like format:
 ```
 9 1:1 3:1 5:18 6:0.5 7:0.5
 4 1:1 4:1 5:18 8:0.33 6:0.33 7:0.33
