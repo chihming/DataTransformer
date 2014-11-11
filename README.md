@@ -28,26 +28,85 @@ python main.py --help
 * **vw2lib** -- convert VW dataformat into libSVM-like format
 
 
-## CSV Data -> libSVM-like Data
-Given an [InputFile] csv data:
+## CSV Data -> CSV training data, CSV testing data
+Given an ***[InputFile]*** csv data:
 ```csv
-rating::user::item::age
-9::userA::itemA::18
-4::userA::itemB::18
-5::userB::itemB::29
-```
-By using following instruction: 
-```python
-python main.py -task 'csv2lib' -infile [InputFile] -ofile [Outputfile] -target 0 -cat 1,2 -num 3 -sep '::' -head 1
-```
-It's able to get a [Outputfile] converted data with libSVM-like format.
-```csv
-9 1:1 3:1 5:18
-4 1:1 4:1 5:18
-5 2:1 4:1 5:29
+rating::user::movie::time
+9::userA::movieA::5
+4::userA::movieB::10
+5::userB::movieB::3
+4::userB::movieC::8
+4::userC::movieA::8
+8::userC::movieC::11
+3::userD::movieA::2
+7::userD::movieC::11
 ```
 
-## CSV Data with Multiple Labels -> libSVM-like Data
+By using instructions:
+* `-task 'dsplit'`: do data splitting
+* `-infile [InputFile]`: input file name
+* `-outfile [OutputFile]`: output file name
+* `-target 0`: split data according to column 1
+* `-sep '::'`: split data by '::'
+* `-ratio 0.8:0.2:0.5`: split targets by 80%/20% as training/testing, given 50% of testing data as training
+* `-header 1`: skip header
+
+```python
+python main.py -task 'dsplit' -infile [InputFile] -outfile [OutputFile] -target 0 -sep '::' -ratio 0.8:0.2:0.5 -header 1
+```
+
+It's able to get [OutputFile].train and [OutputFile].test. For instance:
+
+***[OutputFile].train***
+```csv
+rating::user::movie::time
+9::userA::movieA::5
+4::userA::movieB::10
+5::userB::movieB::3
+4::userC::movieA::8
+8::userC::movieC::11
+3::userD::movieA::2
+```
+***[OutputFile].test***
+```csv
+rating::user::movie::time
+4::userB::movieC::8
+7::userD::movieC::11
+```
+
+## CSV training data, CSV testing data -> libSVM-like data
+Given [InputFiles] (e.g. [InputFile].train,[InputFile].test )
+
+By using instructions:
+* `-task 'csv2lib'`: convert data to libSVM-like format
+* `-infile [InputFile].train,[InputFile].test`: input file names, splitted by ','
+* `-outfile [OutputFile].train,[OutputFile].test`: output file names, splitted by ','
+* `-target 0`: get column 0 as prediction target
+* `-cat 1,2`: categorical encoding on columns 1,2
+* `-num 3`: numerical encoding on column 3
+* `-sep '::'`: split data by '::'
+* `-header 1`: skip header
+
+```python
+python main.py -task 'csv2lib' -infile [InputFile].train,[InputFile].test -outfile [OutputFile].train,[OutputFile].test -target 0 -cat 1,2 -num 3 -sep '::' -header 1
+```
+
+It's able to get the ***[Outputfile].train***
+```csv
+9 1:1 5:1 8:5
+4 1:1 6:1 8:10
+5 2:1 6:1 8:3
+4 3:1 5:1 8:8
+8 3:1 7:1 8:11
+3 4:1 5:1 8:2
+```
+and the ***[Outputfile].train***
+```csv
+4 2:1 7:1 8:8
+7 4:1 7:1 8:11
+```
+
+## For Multi-labeled Features
 Given an [InputFile] csv data with multi-labeled *Genre* feature:
 ```csv
 rating::user::item::age::Genre
@@ -66,47 +125,51 @@ It's able to get [Outputfile] in libSVM-like format:
 5 2:1 4:1 5:29 8:0.33 6:0.33 7:0.33
 ```
 
-## CSV Data -> Relational Data
-Given the [TrainFile] training data:
-```csv
-rating::user::item
-9::userA::itemA
-4::userA::itemB
-5::userB::itemB
-```
-, the [TestFile] testing data:
-```csv
-rating::user::item
-8::userB::itemA
-4::userC::itemB
-```
-and the [RelationalFile] movie profile:
+## CSV training data, CSV testing data -> libFM relational data
+Given the [RelationalFile] movie profile:
 ```csv
 movie::Genre
-itemA::Comedy|Drama
-itemB::Action|Comedy|Drama
-itemC::Documentary
+movieA::Comedy|Drama
+movieB::Action|Comedy|Drama
+movieC::Documentary
+movieD::Comedy
 ```
+
 By using following instructions:
+* `-task 'csv2rel'`: convert data to libFM relational format
+* `-infile [InputFile].train,[InputFile].test`: train/test file names, splitted by ','
+* `-target 0`: get column 0 as mapping data
+* `relfile`: relational data file name
+* `-rtarget 0`: get column 0 as mapping target
+* `-outfile [OutputFile]`: output file name (automatically get [OutputFile]/[OutputFile].train/[OutputFile].test/)
+* `-cat 1,2`: categorical encoding on columns 1,2 of relational data
+* `-sep '::'`: split data by '::'
+* `-msep '|'`: split multi-labeled features by '|'
+* `-header 1`: skip header
+
 ```python
-python main.py -task 'csv2rel' -infile [TrainFile],[TestFile] -target 0 -ofile [Outputfile] -rel [RelationalFile] -rtarget 0 -cat 1,2,4 -num 3 -sep '::' -msep '|' -head 1
+python main.py -task 'csv2rel' -infile [InputFile].train,[InputFile].test -target 0 -relfile [RelationalFile] -rtarget 0 -ofile [Outputfile]  -cat 1,2 -sep '::' -msep '|' -head 1
 ```
 We get one [Outputfile].train file:
 ```csv
 0
 1
 1
+0
+2
+1
 ```
 One [Outputfile].test file:
 ```csv
-0
-1
+2
+2
 ```
 One [Outputfile] encoded file:
 ```csv
-0 0:1 3:0.5 4:0.5
-0 1:1 4:1 5:0.33 3:0.33 4:0.33
-0 2:1 3:1 6:1
+0 0:1 4:0.5 5:0.5
+0 1:1 6:0.33 4:0.33 5:0.33
+0 2:1 7:1
+0 3:1 4:1
 ```
 
 ## Demo on [Movielens 1M/10M](http://grouplens.org/datasets/movielens/) dataset
