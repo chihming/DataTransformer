@@ -61,7 +61,7 @@ def main():
 
 
     if CONFIG.Task == 'csv2lib':
-        dataout = DC.CSVtolib(infile=CONFIG.InputFileName,
+        dataout = DC.CSVtoLib(infile=CONFIG.InputFileName,
                               target_column=CONFIG.TargetColumn,
                               sep=CONFIG.Separtor,
                               header=CONFIG.Header,
@@ -130,13 +130,13 @@ if __name__ == '__main__':
         CONFIG.Separtor = ','
 
     if CONFIG.CategoricalColumn is not None:
-        logger.info("Categorical Columns: %s" % CONFIG.CategoricalColumn)
+        logger.info("Categorical Columns: '%s'" % CONFIG.CategoricalColumn)
         CONFIG.CategoricalColumn = [ int(c) for c in CONFIG.CategoricalColumn.split(',') ]
     else:
         CONFIG.CategoricalColumn = []
 
     if CONFIG.NumericColumn is not None:
-        logger.info("Numeric Columns: %s" % CONFIG.NumericColumn)
+        logger.info("Numeric Columns: '%s'" % CONFIG.NumericColumn)
         CONFIG.NumericColumn = [ int(c) for c in CONFIG.NumericColumn.split(',') ]
     else:
         CONFIG.NumericColumn = []

@@ -9,18 +9,21 @@ class DataConverter:
         self.logger = logger
         pass
     
-    def CSVtolib(self, infile, target_column, sep, header, labels, c_columns, n_columns):
+    def CSVtoLib(self, infile, target_column, sep, header, labels, c_columns, n_columns):
         """
         Convert CSV data to libSVM/libFM format
         """
         target = []
+        
+        self.logger.info("Load data")
         data = [ line.rstrip().split(sep) for line in open(infile) ]
         dim = len(data[0])
         
         if header:
             header = data[0]
             data = data[1:]
-
+        
+        self.logger.info("Encode data")
         for idx in range(dim):
             if idx == target_column:
                 target = list(zip(*data)[idx])
@@ -33,6 +36,7 @@ class DataConverter:
                 self.encoder.encode_numeric( set(zip(*data)[idx]), label=idx )
                 self.logger.info("label: %s\tlength: %d\tMAX: %d" % (idx, self.encoder.get_label_len(idx), self.encoder.get_max_index()) )
 
+        self.logger.info("Transform data")
         converted = []
         converted.append(target)
         for idx in range(dim):
@@ -46,4 +50,14 @@ class DataConverter:
         dataout = [ "%s" % (" ".join(cdata)) for cdata in zip(*converted) ]
 
         return dataout
+
+
+    def CSVtoRel(self, infile, target_column, sep, header, labels, c_columns, n_columns):
+        """
+        Convert data to relational data format
+        """
+        pass
+
+
+
 
