@@ -50,7 +50,7 @@ class Encoder:
 
     def fit_categorical(self, fea_matrix, label=None, sep=None):
         """
-        transform data to encoded index
+        transform categorical data to encoded index
         """
         dataout = []
         
@@ -65,18 +65,14 @@ class Encoder:
 
         return dataout
 
-    def transform_numeric(self, matrix, offset=0):
+    def fit_numeric(self, fea_matrix, label=None):
+        """
+        transform numeric data to encoded index
+        """
         dataout = []
-        dim = len(matrix[0])
-        for vector in matrix:
-            out = []
-            for col in range(dim):
-                v = float(vector[col]) + 0.01
-                if v < 0.0:
-                    out.append("%d:1" % (self.keymap["%d numeric -1" % (col + offset)]) )
-                elif v != 0.0:
-                    out.append("%d:%f" % (self.keymap["%d numeric" % (col + offset)], v) )
 
-            dataout.append(" ".join(out))
+        for value in fea_matrix:
+            dataout.append( "%s:%f" % (self.keymap["%s numerical" % (label)], float(value)) )
+
         return dataout
 

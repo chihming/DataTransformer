@@ -8,8 +8,12 @@ PARSER = argparse.ArgumentParser(description="Parameters for the script.")
 # Header for splitting data
 PARSER.add_argument('-labels', "--Labels", default=None,
                     help="Specify labels for splitting data")
-PARSER.add_argument('-target', "--TargetColumn", type=int, default=0,
+PARSER.add_argument('-target', "--TargetColumn", type=int, default=None,
                     help="Target column for prediction.")
+PARSER.add_argument('-cat', "--CategoricalColumn", default=None,
+                    help="Categorical columns for encoding.")
+PARSER.add_argument('-num', "--NumericColumn", default=None,
+                    help="Numeric column for encoding.")
 
 # files
 PARSER.add_argument('-infile', "--InputFileName", default=None,
@@ -19,7 +23,7 @@ PARSER.add_argument('-outfile', "--OutputFileName", default=None,
 
 PARSER.add_argument('-header', "--Header", type=int, default=None,
                     help="With header or not")
-PARSER.add_argument('-sep', "--Separtor", default=",",
+PARSER.add_argument('-sep', "--Separtor", default=None,
                     help="separtor for splitting data")
 
 # features
@@ -55,7 +59,9 @@ def main():
                           target_column=CONFIG.TargetColumn,
                           sep=CONFIG.Separtor,
                           header=CONFIG.Header,
-                          labels=CONFIG.Labels)
+                          labels=CONFIG.Labels,
+                          c_columns=CONFIG.CategoricalColumn,
+                          n_columns=CONFIG.NumericColumn)
 
     logger.info("Output result to '%s'" % (CONFIG.OutputFileName))
     file_out = open(CONFIG.OutputFileName, 'wb')
@@ -73,33 +79,47 @@ if __name__ == '__main__':
 
     logger.info("Arguments Check")
     
-    if CONFIG.InputFileName:
+    if CONFIG.InputFileName is not None:
         logger.info("Input File Name: '%s'" % CONFIG.InputFileName)
     else:
         logger.error("Please Specify Input File Name")
         exit()
 
-    if CONFIG.OutputFileName:
+    if CONFIG.OutputFileName is not None:
         logger.info("Output File Name: '%s'" % CONFIG.OutputFileName)
     else:
         logger.error("Please Specify Output File Name")
         exit()
 
-    if CONFIG.TargetColumn:
+    if CONFIG.TargetColumn is not None:
         logger.info("Target Column: '%d'" % (CONFIG.TargetColumn))
     else:
-        logger.warning("Default Target Column: '%d'" % (CONFIG.TargetColumn))
+        logger.warning("Default Target Column: '0'")
+        CONFIG.TargetColumn = 0
 
-    if CONFIG.Header != 0:
-        logger.info("Header: 'True'")
+    if CONFIG.Header is not None:
+        logger.info("Header: '%s'" % (CONFIG.Header))
     else:
-        logger.warning("Default Header: 'False'")
-        CONFIG.Header = None
+        logger.warning("Default Header: '0'")
+        CONFIG.Header = False
 
-    if CONFIG.Separtor != ',':
+    if CONFIG.Separtor is not None:
         logger.info("Separtor: '%s'" % CONFIG.Separtor)
     else:
         logger.warning("Default Separtor: ','")
+        CONFIG.Separtor = ','
+
+    if CONFIG.CategoricalColumn is not None:
+        logger.info("Categorical Columns: %s" % CONFIG.CategoricalColumn)
+        CONFIG.CategoricalColumn = [ int(c) for c in CONFIG.CategoricalColumn.split(',') ]
+    else:
+        CONFIG.CategoricalColumn = []
+
+    if CONFIG.NumericColumn is not None:
+        logger.info("Numeric Columns: %s" % CONFIG.NumericColumn)
+        CONFIG.NumericColumn = [ int(c) for c in CONFIG.NumericColumn.split(',') ]
+    else:
+        CONFIG.NumericColumn = []
 
 
     logger.info("Task Start")
