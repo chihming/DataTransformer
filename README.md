@@ -29,7 +29,7 @@ python main.py --help
 
 
 ## CSV Data -> CSV training data, CSV testing data
-Given an ***[InputFile]*** csv data:
+Given an **[InputFile]** csv data:
 ```csv
 rating::user::movie::time
 9::userA::movieA::5
@@ -57,7 +57,7 @@ python main.py -task 'dsplit' -infile [InputFile] -outfile [OutputFile] -target 
 
 It's able to get [OutputFile].train and [OutputFile].test. For instance:
 
-***[OutputFile].train***
+**[OutputFile].train**
 ```csv
 rating::user::movie::time
 9::userA::movieA::5
@@ -67,7 +67,7 @@ rating::user::movie::time
 8::userC::movieC::11
 3::userD::movieA::2
 ```
-***[OutputFile].test***
+**[OutputFile].test**
 ```csv
 rating::user::movie::time
 4::userB::movieC::8
@@ -91,7 +91,7 @@ By using instructions:
 python main.py -task 'csv2lib' -infile [InputFile].train,[InputFile].test -outfile [OutputFile].train,[OutputFile].test -target 0 -cat 1,2 -num 3 -sep '::' -header 1
 ```
 
-It's able to get the ***[Outputfile].train***
+It's able to get the **[Outputfile].train**
 ```csv
 9 1:1 5:1 8:5
 4 1:1 6:1 8:10
@@ -100,7 +100,7 @@ It's able to get the ***[Outputfile].train***
 8 3:1 7:1 8:11
 3 4:1 5:1 8:2
 ```
-and the ***[Outputfile].train***
+and the **[Outputfile].train**
 ```csv
 4 2:1 7:1 8:8
 7 4:1 7:1 8:11
@@ -150,26 +150,26 @@ By using following instructions:
 ```python
 python main.py -task 'csv2rel' -infile [InputFile].train,[InputFile].test -target 0 -relfile [RelationalFile] -rtarget 0 -ofile [Outputfile]  -cat 1,2 -sep '::' -msep '|' -head 1
 ```
-We get one [Outputfile].train file:
-```csv
-0
-1
-1
-0
-2
-1
-```
-One [Outputfile].test file:
-```csv
-2
-2
-```
-One [Outputfile] encoded file:
+We get one **[Outputfile]** encoded file:
 ```csv
 0 0:1 4:0.5 5:0.5
 0 1:1 6:0.33 4:0.33 5:0.33
 0 2:1 7:1
 0 3:1 4:1
+```
+One **[Outputfile].train** file:
+```csv
+0
+1
+1
+0
+2
+1
+```
+One **[Outputfile].test** file:
+```csv
+2
+2
 ```
 
 ## Demo on [Movielens 1M/10M](http://grouplens.org/datasets/movielens/) dataset
