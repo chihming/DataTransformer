@@ -124,7 +124,7 @@ It's able to get **[Outputfile]** in libSVM-like format:
 ```
 
 ## CSV training data, CSV testing data -> libFM relational data
-Given the [RelationalFile] movie profile:
+Given the **[RelationalFile]** movie profile:
 ```csv
 movie::Genre
 movieA::Comedy|Drama
@@ -137,7 +137,7 @@ By using following instructions:
 * `-task 'csv2rel'`: convert data to libFM relational format
 * `-infile [InputFile].train,[InputFile].test`: train/test file names, splitted by ','
 * `-target 0`: get column 0 as mapping data
-* `relfile`: relational data file name
+* `-relfile [RelationalFile]`: relational data file name (must be unique data)
 * `-rtarget 0`: get column 0 as mapping target
 * `-outfile [OutputFile]`: output file name (automatically get [OutputFile]/[OutputFile].train/[OutputFile].test/)
 * `-cat 1,2`: categorical encoding on columns 1,2 of relational data
