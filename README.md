@@ -103,9 +103,9 @@ One [Outputfile].test file:
 ```
 One [Outputfile] encoded file:
 ```csv
-0:1 3:0.5 4:0.5
-1:1 4:1 5:0.33 3:0.33 4:0.33
-2:1 3:1 6:1
+0 0:1 3:0.5 4:0.5
+0 1:1 4:1 5:0.33 3:0.33 4:0.33
+0 2:1 3:1 6:1
 ```
 
 ## Demo on [Movielens 1M/10M](http://grouplens.org/datasets/movielens/) dataset
