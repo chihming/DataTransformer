@@ -1,5 +1,4 @@
-import argparse, json, logging
-from datetime import datetime
+import argparse, logging
 from code.DataConverter import DataConverter
 
 # Arguments
@@ -29,6 +28,8 @@ PARSER.add_argument('-header', "--Header", type=int, default=None,
                     help="With header or not")
 PARSER.add_argument('-sep', "--Separtor", default=None,
                     help="separtor for splitting data")
+PARSER.add_argument('-msep', "--MutiLabelSepartor", default=None,
+                    help="separtor for splitting multiple-labeled data")
 
 # features
 PARSER.add_argument('-his', "--History", action="store_true",
@@ -64,6 +65,7 @@ def main():
         dataout = DC.CSVtoLib(infile=CONFIG.InputFileName,
                               target_column=CONFIG.TargetColumn,
                               sep=CONFIG.Separtor,
+                              msep=CONFIG.MutiLabelSepartor,
                               header=CONFIG.Header,
                               labels=CONFIG.Labels,
                               c_columns=CONFIG.CategoricalColumn,
@@ -128,6 +130,11 @@ if __name__ == '__main__':
     else:
         logger.warning("Default Separtor: ','")
         CONFIG.Separtor = ','
+
+    if CONFIG.Separtor is not None:
+        logger.info("Multi-labeled Separtor: '%s'" % CONFIG.Separtor)
+    else:
+        logger.warning("No multi-labeled data")
 
     if CONFIG.CategoricalColumn is not None:
         logger.info("Categorical Columns: '%s'" % CONFIG.CategoricalColumn)

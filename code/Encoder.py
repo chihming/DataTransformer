@@ -14,15 +14,15 @@ class Encoder:
     def get_label_len(self, label):
         return self.label_len[label]
 
-    def encode_categorical(self, fea_vec, label=None, sep=None):
+    def encode_categorical(self, fea_vec, msep, label=None, sep=None):
         """
         Encode for categorical features
         Return: Successful / Fail
         """
-        if sep:
+        if msep:
             idx_init = self.idx
             for feas in fea_vec:
-                for fea in feas:
+                for fea in feas.split(msep):
                     key = "%s %s" % (label, fea)
                     if key not in self.keymap:
                         self.keymap[key] = self.idx
@@ -48,15 +48,17 @@ class Encoder:
         self.idx += 1
         self.label_len[label] = self.idx - idx_init
 
-    def fit_categorical(self, fea_matrix, label=None, sep=None):
+    def fit_categorical(self, fea_matrix, msep, label=None, sep=None):
         """
         transform categorical data to encoded index
         """
         dataout = []
         
-        if sep:
+        if msep:
             for fea_vec in fea_matrix:
-                out = ["%d:1" % (self.keymap["%s %s" % (label, fea)]) for fea in fea_vec.split(sep)]
+                feas = fea_vec.split(msep)
+                weight = 1./len(feas)
+                out = ["%d:%f" % (self.keymap["%s %s" % (label, fea)], weight) for fea in feas]
                 dataout.append(" ".join(out))
         else:
             for fea_vec in fea_matrix:
