@@ -13,7 +13,7 @@ pypy main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
 
 For more details, plase refer to `--help` function.
 ```python
-python main.py --helpb
+python main.py --help
 ```
 
 ## Supported Task
