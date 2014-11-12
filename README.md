@@ -13,7 +13,7 @@ pypy main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
 
 For more details, plase refer to `--help` function.
 ```python
-python main.py --help
+python main.py --helpb
 ```
 
 ## Supported Task
@@ -42,7 +42,7 @@ rating::user::movie::time
 7::userD::movieC::11
 ```
 
-By using instructions:
+By using the instructions:
 * `-task 'dsplit'`: do data splitting
 * `-infile [InputFile]`: input file name
 * `-outfile [OutputFile]`: output file name
@@ -75,7 +75,7 @@ It's able to get **[OutputFile].train** and **[OutputFile].test**. For instance:
 ## CSV training/testing data -> libSVM-like data
 Given **[InputFiles]** e.g. [InputFile].train,[InputFile].test
 
-By using instructions:
+By using the instructions:
 * `-task 'csv2lib'`: convert data to libSVM-like format
 * `-infile [InputFile].train,[InputFile].test`: input file names, splitted by ','
 * `-outfile [OutputFile].train,[OutputFile].test`: output file names, splitted by ','
@@ -112,7 +112,7 @@ rating::user::item::age::Genre
 4::userA::itemB::18::Action|Comedy|Drama
 5::userB::itemB::29::Action|Comedy|Drama
 ```
-By using `--msep` instruction:
+By using the `--msep` instruction:
 ```python
 python main.py -task 'csv2lib' -infile [InputFile] -ofile [Outputfile] -target 0 -cat 1,2,4 -num 3 -sep '::' -msep '|' -head 1
 ```
