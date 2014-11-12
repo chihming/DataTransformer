@@ -124,6 +124,9 @@ It's able to get **[Outputfile]** in libSVM-like format:
 ```
 
 ## CSV training/testing data -> libFM relational data
+Relational data format of libFM can be found in
+*Steffen Rendle (2013): Scaling Factorization Machines to Relational Data, in Proceedings of the 39th international conference on Very Large Data Bases (VLDB 2013)*
+
 Given the **[RelationalFile]** movie profile:
 ```csv
 movie::Genre
