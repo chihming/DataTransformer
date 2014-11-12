@@ -46,6 +46,11 @@ class Encoder:
         key = "%s numerical" % (label)
         self.keymap[key] = self.idx
         self.idx += 1
+
+        key = "%s numerical_except" % (label)
+        self.keymap[key] = self.idx
+        self.idx += 1
+
         self.label_len[label] = self.idx - idx_init
 
     def fit_categorical(self, fea_matrix, msep, label=None, sep=None):
@@ -57,7 +62,7 @@ class Encoder:
         if msep:
             for fea_vec in fea_matrix:
                 feas = fea_vec.split(msep)
-                weight = 2./len(feas)
+                weight = 1./len(feas)
                 out = ["%d:%f" % (self.keymap["%s %s" % (label, fea)], weight) for fea in feas]
                 dataout.append(" ".join(out))
         else:
@@ -74,7 +79,10 @@ class Encoder:
         dataout = []
 
         for value in fea_matrix:
-            dataout.append( "%s:%f" % (self.keymap["%s numerical" % (label)], float(value)) )
+            if value.isdigit():
+                dataout.append( "%s:%f" % (self.keymap["%s numerical" % (label)], float(value)) )
+            else:
+                dataout.append( "%s:1" % (self.keymap["%s numerical_except" % (label)]) )
 
         return dataout
 

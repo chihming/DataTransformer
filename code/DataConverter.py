@@ -91,7 +91,7 @@ class DataConverter:
 
         return dataout
 
-    def CSVtoRel(self, infile, relfile, target_column, rtarget_column, sep, msep, offset, header, labels, c_columns, n_columns):
+    def CSVtoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, labels, c_columns, n_columns):
         """
         Convert data to relational data format
         """
@@ -100,11 +100,11 @@ class DataConverter:
         self.logger.info("Load data")
         targetTrain = [ line.rstrip().split(sep)[target_column] for line in open(infile[0]) ]
         targetTest = [ line.rstrip().split(sep)[target_column] for line in open(infile[1]) ]
-        keymap = { value:str(idx) for idx, value in enumerate( [line.rstrip().split(sep)[rtarget_column] for line in open(relfile)] ) }
+        keymap = { value:str(idx) for idx, value in enumerate( [line.rstrip().split(rsep)[rtarget_column] for line in open(relfile)] ) }
         datamapTrain = [ keymap[v] for v in targetTrain ]
         datamapTest = [ keymap[v] for v in targetTest ]
         
-        data = [ line.rstrip().split(sep) for line in open(relfile) ]
+        data = [ line.rstrip().split(rsep) for line in open(relfile) ]
         dim = len(data[0])
         
         if header:

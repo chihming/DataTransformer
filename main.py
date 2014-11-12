@@ -34,6 +34,8 @@ PARSER.add_argument('-header', "--Header", type=int, default=None,
                     help="With header or not")
 PARSER.add_argument('-sep', "--Separtor", default=None,
                     help="separtor for splitting data")
+PARSER.add_argument('-rsep', "--RSepartor", default=None,
+                    help="separtor for splitting relational data")
 PARSER.add_argument('-msep', "--MutiLabelSepartor", default=None,
                     help="separtor for splitting multiple-labeled data")
 
@@ -104,6 +106,7 @@ def main():
                                      target_column=CONFIG.TargetColumn,
                                      rtarget_column=CONFIG.RTargetColumn,
                                      sep=CONFIG.Separtor,
+                                     rsep=CONFIG.RSepartor,
                                      msep=CONFIG.MutiLabelSepartor,
                                      offset=CONFIG.Offset,
                                      header=CONFIG.Header,
@@ -188,9 +191,17 @@ if __name__ == '__main__':
 
     if CONFIG.Separtor is not None:
         logger.info("Separtor: '%s'" % CONFIG.Separtor)
+        if CONFIG.Separtor == "\\t": CONFIG.Separtor = "\t"
     else:
         logger.warning("Default Separtor: ','")
         CONFIG.Separtor = ','
+
+    if CONFIG.RSepartor is not None:
+        logger.info("Separtor: '%s'" % CONFIG.RSepartor)
+        if CONFIG.RSepartor == "\\t": CONFIG.RSepartor = "\t"
+    else:
+        logger.warning("Set Relational Data Separtor as Separtor '%s'" % CONFIG.Separtor)
+        CONFIG.RSepartor = CONFIG.Separtor
 
     if CONFIG.Separtor is not None:
         logger.info("Multi-labeled Separtor: '%s'" % CONFIG.Separtor)
