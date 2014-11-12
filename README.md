@@ -48,7 +48,7 @@ By using instructions:
 * `-outfile [OutputFile]`: output file name
 * `-target 0`: split data according to column 1
 * `-sep '::'`: split data by '::'
-* `-ratio 0.8:0.2:0.5`: split targets by 80%/20% as training/testing, given 50% of testing data as training
+* `-ratio 0.8:0.2:0.5`: split targets to 80%/20% as training/testing, 50% of testing data for training
 * `-header 1`: skip header
 
 ```python
