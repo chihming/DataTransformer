@@ -27,6 +27,13 @@ python main.py --helpb
 * **lib2vw** -- convert libSVM-like dataformat into VW format
 * **vw2lib** -- convert VW dataformat into libSVM-like format
 
+## Supported Encoding Method
+* `-cat` -- like one-hot encode, usually for categorical feature (supports for multi-labeled features)  
+* `-num` -- directly use the value, usually for numerical data
+
+## TODO Encoding Method
+* `-wcat` -- encode multi-labeled features with different weights
+* `-sim` -- automatically get similar features as meta features
 
 ## CSV Data -> CSV training data + CSV testing data
 Given an **[InputFile]** csv data:
