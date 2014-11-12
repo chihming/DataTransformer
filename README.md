@@ -55,7 +55,7 @@ By using instructions:
 python main.py -task 'dsplit' -infile [InputFile] -outfile [OutputFile] -target 0 -sep '::' -ratio 0.8:0.2:0.5 -header 1
 ```
 
-It's able to get [OutputFile].train and [OutputFile].test. For instance:
+It's able to get **[OutputFile].train** and **[OutputFile].test**. For instance:
 
 **[OutputFile].train**
 ```csv
@@ -98,7 +98,7 @@ It's able to get the **[Outputfile].train**
 8 3:1 7:1 8:11
 3 4:1 5:1 8:2
 ```
-and the **[Outputfile].train**
+and the **[Outputfile].test**
 ```csv
 4 2:1 7:1 8:8
 7 4:1 7:1 8:11
