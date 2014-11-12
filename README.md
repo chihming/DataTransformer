@@ -141,12 +141,13 @@ By using following instructions:
 * `-rtarget 0`: get column 0 as mapping target
 * `-outfile [OutputFile]`: output file name (automatically get [OutputFile]/[OutputFile].train/[OutputFile].test/)
 * `-cat 1,2`: categorical encoding on columns 1,2 of relational data
-* `-sep '::'`: split data by '::'
+* `-sep '::'`: split train/test data by '::'
+* `-rsep '::'`: split relational data by '::'
 * `-msep '|'`: split multi-labeled features by '|'
 * `-header 1`: skip header
 
 ```python
-python main.py -task 'csv2rel' -infile [InputFile].train,[InputFile].test -target 0 -relfile [RelationalFile] -rtarget 0 -ofile [Outputfile]  -cat 1,2 -sep '::' -msep '|' -head 1
+python main.py -task 'csv2rel' -infile [InputFile].train,[InputFile].test -sep '::' -target 0 -relfile [RelationalFile] -rsep '::' -rtarget 0 -ofile [Outputfile] -cat 1,2 -msep '|' -head 1
 ```
 We get one **[Outputfile]** encoded file:
 ```csv
