@@ -1,5 +1,5 @@
 ## Data2libFormat
-A simple tool for converting csv data into [libSVM](http://www.csie.ntu.edu.tw/~cjlin/libsvm/)/[libFM](http://www.libfm.org/) format.
+A simple tool for data splitting and data transforming. e.g. Converting csv data into [libSVM](http://www.csie.ntu.edu.tw/~cjlin/libsvm/)/[libFM](http://www.libfm.org/) format.
 
 ## Usage
 ```python
