@@ -72,6 +72,28 @@ class Encoder:
 
         return dataout
 
+    def fit_feature(self, fea_matrix, normalized=False, msep=None, label=None, sep=None):
+        """
+        transform extracted feature to encoded index
+        """
+        dataout = []
+        
+        if msep:
+            for fea_vec in fea_matrix:
+                out = []
+                efeas = fea_vec.split(msep)
+                for efea in efeas:
+                    fea, weight = efea.split(':')
+                    out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], weight) )
+                dataout.append(" ".join(out))
+        else:
+            for fea_vec in fea_matrix:
+                fea, weight = fea_vec.split(':')
+                out = ["%d:%f" % (self.keymap["%s %s" % (label, fea)], weight)]
+                dataout.append(" ".join(out))
+
+        return dataout
+
     def fit_numeric(self, fea_matrix, label=None):
         """
         transform numeric data to encoded index

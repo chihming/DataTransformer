@@ -63,7 +63,12 @@ class DataConverter:
                 data[i] = data[i][1:]
         
         self.logger.info("Encode data")
-        
+
+        k_columns = []
+        for tp in knn:
+            k, acolumn, bcolumn = tp.split(':')
+            k_columns.append(int(acolumn))
+
         # Cat, Num
         for e, d in enumerate(data):
             for idx in range(len(d[0])):
@@ -71,31 +76,36 @@ class DataConverter:
                     target[e] = list(zip(*(d))[idx])
                     continue
                 elif idx in c_columns:
-                    self.encoder.encode_categorical( set(zip(*(d))[idx]), msep=msep, label=idx )
-                    self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (idx, self.encoder.get_label_len(idx), self.encoder.get_max_index()) )
-                    continue
+                    label = 'Cat ' + str(idx)
+                    self.encoder.encode_categorical( set(zip(*(d))[idx]), msep=msep, label=label )
+                    self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
                 elif idx in n_columns:
-                    self.encoder.encode_numeric( set(zip(*(d))[idx]), label=idx )
-                    self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (idx, self.encoder.get_label_len(idx), self.encoder.get_max_index()) )
+                    label = 'Num ' + str(idx)
+                    self.encoder.encode_numeric( set(zip(*(d))[idx]), label=label )
+                    self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
+
+                if idx in k_columns:
+                    label = 'Sim ' + str(idx)
+                    self.encoder.encode_categorical( set(zip(*(d))[idx]), msep=msep, label=label )
+                    self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
 
         # KNN
-        nn = {}
+        nn = {}        
         self.logger.info("Compute Similarity Feature")
         for tp in knn:
-            nn.clear()
+            tempnn = {}
             k, acolumn, bcolumn = tp.split(':')
             k = int(k)
             acolumn = int(acolumn)
             bcolumn = int(bcolumn)
 
             for a in set(list(zip(*(data[0]))[acolumn])):
-                nn[a] = []
+                tempnn[a] = []
             for a, b in zip( list(zip(*(data[0]))[acolumn]), list(zip(*(data[0]))[bcolumn]) ):
-                nn[a].append(b)
+                tempnn[a].append(b)
 
             self.logger.info("Get column %d similarities based on column %d" % (acolumn, bcolumn))
-            print len(nn)
-            print self.fmaker.pairwise_similarity(nn)
+            nn[acolumn] = self.fmaker.pairwise_similarity(tempnn, topk=k)
 
         # Data Transforming
         self.logger.info("Data Transforming")
@@ -104,9 +114,16 @@ class DataConverter:
             converted[e].append(target[e])
             for idx in range(len(d[0])):
                 if idx in c_columns:
-                    converted[e].append( self.encoder.fit_categorical( zip(*d)[idx], msep, label=idx ) )
+                    label = 'Cat ' + str(idx)
+                    converted[e].append( self.encoder.fit_categorical( zip(*d)[idx], msep, label=label ) )
                 elif idx in n_columns:
-                    converted[e].append( self.encoder.fit_numeric( zip(*d)[idx], label=idx ) )
+                    label = 'Num ' + str(idx)
+                    converted[e].append( self.encoder.fit_numeric( zip(*d)[idx], label=label ) )
+
+                if idx in k_columns:
+                    label = 'Sim ' + str(idx)
+                    fea_matrix = [ nn[idx][fea] for fea in zip(*d)[idx] ]
+                    converted[e].append( self.encoder.fit_feature( fea_matrix, msep='|', label=label ) )
 
             dataout[e] = [ "%s" % (" ".join(cdata)) for cdata in zip(*converted[e]) ]
 
