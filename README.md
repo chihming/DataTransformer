@@ -6,12 +6,12 @@ A simple tool for data splitting and data transforming. e.g. Converting csv data
 python main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
 ```
 
-It supports [pypy](http://pypy.org/) as well. (a faster way for executoin)
+No third-party package is used in this tool, so it supports [pypy](http://pypy.org/) for fast execution.
 ```python
 pypy main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
 ```
 
-For more details, plase refer to `--help` function.
+More parameter options can be found in `--help` or wiki page (not finished for now).
 ```python
 python main.py --help
 ```
