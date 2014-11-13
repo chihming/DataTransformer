@@ -1,9 +1,11 @@
+from code.FeatureMaker import FeatureMaker
 from code.Encoder import Encoder
 from random import shuffle
 
 class DataConverter:
     logger = None
     encoder = Encoder()
+    fmaker = FeatureMaker()
 
     def __init__(self, logger):
         self.logger = logger
@@ -43,14 +45,12 @@ class DataConverter:
 
         return dataoutTrain, dataoutTest
     
-    def CSVtoLib(self, infile, target_column, sep, msep, offset, header, labels, c_columns, n_columns):
+    def CSVtoLib(self, infile, target_column, sep, msep, offset, header, c_columns, n_columns, knn):
         """
         Convert CSV data to libSVM/libFM format
         """
-
-        self.encoder.set_offset(offset)
-
         self.logger.info("Load data")
+        self.encoder.set_offset(offset)
 
         target = [[] for i in range(len(infile))]
         converted = [[] for i in range(len(infile))]
@@ -64,6 +64,7 @@ class DataConverter:
         
         self.logger.info("Encode data")
         
+        # Cat, Num
         for e, d in enumerate(data):
             for idx in range(len(d[0])):
                 if idx == target_column:
@@ -77,7 +78,27 @@ class DataConverter:
                     self.encoder.encode_numeric( set(zip(*(d))[idx]), label=idx )
                     self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (idx, self.encoder.get_label_len(idx), self.encoder.get_max_index()) )
 
-        self.logger.info("Transform data")
+        # KNN
+        nn = {}
+        self.logger.info("Compute Similarity Feature")
+        for tp in knn:
+            nn.clear()
+            k, acolumn, bcolumn = tp.split(':')
+            k = int(k)
+            acolumn = int(acolumn)
+            bcolumn = int(bcolumn)
+
+            for a in set(list(zip(*(data[0]))[acolumn])):
+                nn[a] = []
+            for a, b in zip( list(zip(*(data[0]))[acolumn]), list(zip(*(data[0]))[bcolumn]) ):
+                nn[a].append(b)
+
+            self.logger.info("Get column %d similarities based on column %d" % (acolumn, bcolumn))
+            print len(nn)
+            print self.fmaker.pairwise_similarity(nn)
+
+        # Data Transforming
+        self.logger.info("Data Transforming")
         dataout = [[] for i in range(len(infile))]
         for e, d in enumerate(data):
             converted[e].append(target[e])
@@ -91,7 +112,7 @@ class DataConverter:
 
         return dataout
 
-    def CSVtoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, labels, c_columns, n_columns):
+    def CSVtoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, c_columns, n_columns):
         """
         Convert data to relational data format
         """

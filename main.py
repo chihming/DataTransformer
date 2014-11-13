@@ -9,8 +9,6 @@ PARSER.add_argument('-task', "--Task", default=None,
                     help="Specify the task. Options: 'csv2lib', 'csv2rel'")
 
 # Header for splitting data
-PARSER.add_argument('-labels', "--Labels", default=None,
-                    help="Specify labels for splitting data")
 PARSER.add_argument('-target', "--TargetColumn", type=int, default=None,
                     help="Target column for input data.")
 PARSER.add_argument('-rtarget', "--RTargetColumn", type=int, default=None,
@@ -19,6 +17,8 @@ PARSER.add_argument('-cat', "--CategoricalColumn", default=None,
                     help="Categorical columns for encoding.")
 PARSER.add_argument('-num', "--NumericColumn", default=None,
                     help="Numeric column for encoding.")
+PARSER.add_argument('-knn', "--KNNColumn", default=None,
+                    help="Columns for KNN encoding.")
 PARSER.add_argument('-ratio', "--Ratio", default=None,
                     help="param for splitting data")
 
@@ -90,9 +90,9 @@ def main():
                               msep=CONFIG.MutiLabelSepartor,
                               offset=CONFIG.Offset,
                               header=CONFIG.Header,
-                              labels=CONFIG.Labels,
                               c_columns=CONFIG.CategoricalColumn,
-                              n_columns=CONFIG.NumericColumn)
+                              n_columns=CONFIG.NumericColumn,
+                              knn=CONFIG.KNNColumn)
 
         for e, out in enumerate(dataout):
             logger.info("Output result to '%s'" % (CONFIG.OutputFileName[e]))
@@ -110,7 +110,6 @@ def main():
                                      msep=CONFIG.MutiLabelSepartor,
                                      offset=CONFIG.Offset,
                                      header=CONFIG.Header,
-                                     labels=CONFIG.Labels,
                                      c_columns=CONFIG.CategoricalColumn,
                                      n_columns=CONFIG.NumericColumn)
 
@@ -219,6 +218,12 @@ if __name__ == '__main__':
         CONFIG.NumericColumn = [ int(c) for c in CONFIG.NumericColumn.split(',') ]
     else:
         CONFIG.NumericColumn = []
+
+    if CONFIG.KNNColumn is not None:
+        logger.info("Columns for KNN: '%s'" % CONFIG.KNNColumn.split(','))
+        CONFIG.KNNColumn = CONFIG.KNNColumn.split(',')
+    else:
+        CONFIG.KNNColumn = []
 
     if CONFIG.Offset is not None:
         logger.info("Offset: '%s' (index starts from %s)" % (CONFIG.Offset, CONFIG.Offset))
