@@ -43,9 +43,12 @@ PARSER.add_argument('-msep', "--MutiLabelSepartor", default=None,
 PARSER.add_argument('-alpha', "--Alpha", type=float, default=0.5,
                     help="Parameter of cosine similarity.")
 PARSER.add_argument('-nor', "--Normalized", type=float, default=0,
-                    help="Parameter of cosine similarity.")
+                    help="Do normalization or not.")
 PARSER.add_argument('-offset', "--Offset", default=None,
                     help="Encoding offset")
+PARSER.add_argument('-group', "--Group", type=float, default=0.5,
+                    help="Grouping number.")
+
 
 PARSER.set_defaults(argument_default=False)
 CONFIG = PARSER.parse_args()
@@ -123,6 +126,12 @@ def main():
         file_out.write('\n'.join(dataout[2]))
         file_out.close()
 
+        if CONFIG.Group is not None:
+            logger.info("Output result to '%s'" % (CONFIG.OutputFileName[0]) + '.group')
+            file_out = open(CONFIG.OutputFileName[0] + 'group', 'wb')
+            file_out.write('\n'.join( ["%s" % (CONFIG.Group)]*dataout[-1] ))
+            file_out.close()
+
     else:
         logger.error("Unknow Task")
 
@@ -190,8 +199,7 @@ if __name__ == '__main__':
         logger.info("Separtor: '%s'" % CONFIG.Separtor)
         if CONFIG.Separtor == "\\t": CONFIG.Separtor = "\t"
     else:
-        logger.warning("Default Separtor: ','")
-        CONFIG.Separtor = ','
+        logger.warning("Please Specify Separtor")
 
     if CONFIG.RSepartor is not None:
         logger.info("Separtor: '%s'" % CONFIG.RSepartor)

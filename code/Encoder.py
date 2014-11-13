@@ -80,6 +80,10 @@ class Encoder:
         
         if normalized:
             for fea_vec in fea_matrix:
+                if fea_vec == '':
+                    dataout.append("")
+                    continue
+
                 out = []
                 efeas = fea_vec.split(msep)
                 allw = 0.0
@@ -93,6 +97,10 @@ class Encoder:
 
         else:
             for fea_vec in fea_matrix:
+                if fea_vec == '':
+                    dataout.append("")
+                    continue
+
                 out = []
                 efeas = fea_vec.split(msep)
                 for efea in efeas:

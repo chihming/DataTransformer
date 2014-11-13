@@ -55,6 +55,7 @@ class DataConverter:
         target = [[] for i in range(len(infile))]
         converted = [[] for i in range(len(infile))]
         data = []
+        nn = {}        
         for fname in infile:
             data.append( [ line.rstrip().split(sep) for line in open(fname) ] )
         
@@ -90,7 +91,6 @@ class DataConverter:
                     self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
 
         # KNN
-        nn = {}        
         self.logger.info("Compute Similarity Feature")
         for tp in knn:
             tempnn = {}
@@ -122,7 +122,7 @@ class DataConverter:
 
                 if idx in k_columns:
                     label = 'Sim ' + str(idx)
-                    fea_matrix = [ nn[idx][fea] for fea in zip(*d)[idx] ]
+                    fea_matrix = [ nn[idx][fea] if fea in nn[idx] else "" for fea in zip(*d)[idx] ]
                     converted[e].append( self.encoder.fit_feature( fea_matrix, msep='|', label=label, normalized=normalized ) )
 
             dataout[e] = [ "%s" % (" ".join(cdata)) for cdata in zip(*converted[e]) ]
@@ -147,6 +147,7 @@ class DataConverter:
         data = [ line.rstrip().split(rsep) for line in open(relfile) ]
         dim = len(data[0])
  
+        nn = {}        
         k_columns = []
         for tp in knn:
             k, acolumn, bcolumn = tp.split(':')
@@ -176,7 +177,6 @@ class DataConverter:
 
 
         # KNN
-        nn = {}        
         self.logger.info("Compute Similarity Feature")
         for tp in knn:
             tempnn = {}
@@ -206,10 +206,10 @@ class DataConverter:
             
             if idx in k_columns:
                 label = 'Sim ' + str(idx)
-                fea_matrix = [ nn[idx][fea] for fea in zip(*data)[idx] ]
+                fea_matrix = [ nn[idx][fea] if fea in nn[idx] else "" for fea in zip(*d)[idx] ]
                 converted.append( self.encoder.fit_feature( fea_matrix, msep='|', label=label, normalized=normalized ) )
 
         dataout = [ "%s" % (" ".join(cdata)) for cdata in zip(*converted) ]
 
-        return dataout, datamapTrain, datamapTest
+        return dataout, datamapTrain, datamapTest, self.get_max_index()-1
 
