@@ -1,5 +1,5 @@
 ## Data2libFormat
-A simple tool for converting csv data into [libSVM](http://www.csie.ntu.edu.tw/~cjlin/libsvm/)/[libFM](http://www.libfm.org/) format.
+A simple tool for data splitting and data transforming. e.g. Converting csv data into [libSVM](http://www.csie.ntu.edu.tw/~cjlin/libsvm/)/[libFM](http://www.libfm.org/) format.
 
 ## Usage
 ```python
@@ -27,6 +27,13 @@ python main.py --help
 * **lib2vw** -- convert libSVM-like dataformat into VW format
 * **vw2lib** -- convert VW dataformat into libSVM-like format
 
+## Supported Encoding Method
+* `-cat` -- like one-hot encode, usually for categorical feature (supports for multi-labeled features)  
+* `-num` -- directly use the value, usually for numerical data
+
+## TODO Encoding Method
+* `-wcat` -- encode multi-labeled features with different weights
+* `-sim` -- automatically get similar features as meta features
 
 ## CSV Data -> CSV training data + CSV testing data
 Given an **[InputFile]** csv data:
@@ -42,20 +49,20 @@ rating::user::movie::time
 7::userD::movieC::11
 ```
 
-By using instructions:
+By using the instructions:
 * `-task 'dsplit'`: do data splitting
 * `-infile [InputFile]`: input file name
 * `-outfile [OutputFile]`: output file name
 * `-target 0`: split data according to column 1
 * `-sep '::'`: split data by '::'
-* `-ratio 0.8:0.2:0.5`: split targets by 80%/20% as training/testing, given 50% of testing data as training
+* `-ratio 0.8:0.2:0.5`: split targets to 80%/20% as training/testing, 50% of testing data for training
 * `-header 1`: skip header
 
 ```python
 python main.py -task 'dsplit' -infile [InputFile] -outfile [OutputFile] -target 0 -sep '::' -ratio 0.8:0.2:0.5 -header 1
 ```
 
-It's able to get [OutputFile].train and [OutputFile].test. For instance:
+It's able to get **[OutputFile].train** and **[OutputFile].test**. For instance:
 
 **[OutputFile].train**
 ```csv
@@ -75,7 +82,7 @@ It's able to get [OutputFile].train and [OutputFile].test. For instance:
 ## CSV training/testing data -> libSVM-like data
 Given **[InputFiles]** e.g. [InputFile].train,[InputFile].test
 
-By using instructions:
+By using the instructions:
 * `-task 'csv2lib'`: convert data to libSVM-like format
 * `-infile [InputFile].train,[InputFile].test`: input file names, splitted by ','
 * `-outfile [OutputFile].train,[OutputFile].test`: output file names, splitted by ','
@@ -98,7 +105,7 @@ It's able to get the **[Outputfile].train**
 8 3:1 7:1 8:11
 3 4:1 5:1 8:2
 ```
-and the **[Outputfile].train**
+and the **[Outputfile].test**
 ```csv
 4 2:1 7:1 8:8
 7 4:1 7:1 8:11
@@ -112,7 +119,7 @@ rating::user::item::age::Genre
 4::userA::itemB::18::Action|Comedy|Drama
 5::userB::itemB::29::Action|Comedy|Drama
 ```
-By using `--msep` instruction:
+By using the `--msep` instruction:
 ```python
 python main.py -task 'csv2lib' -infile [InputFile] -ofile [Outputfile] -target 0 -cat 1,2,4 -num 3 -sep '::' -msep '|' -head 1
 ```
@@ -124,6 +131,9 @@ It's able to get **[Outputfile]** in libSVM-like format:
 ```
 
 ## CSV training/testing data -> libFM relational data
+Relational data format of libFM can be found in
+* *Steffen Rendle (2013): Scaling Factorization Machines to Relational Data, in Proceedings of the 39th international conference on Very Large Data Bases (VLDB 2013)*
+
 Given the **[RelationalFile]** movie profile:
 ```csv
 movie::Genre
@@ -141,12 +151,13 @@ By using following instructions:
 * `-rtarget 0`: get column 0 as mapping target
 * `-outfile [OutputFile]`: output file name (automatically get [OutputFile]/[OutputFile].train/[OutputFile].test/)
 * `-cat 1,2`: categorical encoding on columns 1,2 of relational data
-* `-sep '::'`: split data by '::'
+* `-sep '::'`: split train/test data by '::'
+* `-rsep '::'`: split relational data by '::'
 * `-msep '|'`: split multi-labeled features by '|'
 * `-header 1`: skip header
 
 ```python
-python main.py -task 'csv2rel' -infile [InputFile].train,[InputFile].test -target 0 -relfile [RelationalFile] -rtarget 0 -ofile [Outputfile]  -cat 1,2 -sep '::' -msep '|' -head 1
+python main.py -task 'csv2rel' -infile [InputFile].train,[InputFile].test -sep '::' -target 0 -relfile [RelationalFile] -rsep '::' -rtarget 0 -ofile [Outputfile] -cat 1,2 -msep '|' -head 1
 ```
 We get one **[Outputfile]** encoded file:
 ```csv
