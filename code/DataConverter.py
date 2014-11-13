@@ -129,13 +129,15 @@ class DataConverter:
 
         return dataout
 
-    def CSVtoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, alpha, normalized, c_columns, n_columns):
+    def CSVtoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn):
         """
         Convert data to relational data format
         """
         self.encoder.set_offset(offset)
 
         self.logger.info("Load data")
+        Train = [ line.rstrip().split(sep) for line in open(infile[0]) ]
+        Test = [ line.rstrip().split(sep) for line in open(infile[0]) ]
         targetTrain = [ line.rstrip().split(sep)[target_column] for line in open(infile[0]) ]
         targetTest = [ line.rstrip().split(sep)[target_column] for line in open(infile[1]) ]
         keymap = { value:str(idx) for idx, value in enumerate( [line.rstrip().split(rsep)[rtarget_column] for line in open(relfile)] ) }
@@ -144,7 +146,12 @@ class DataConverter:
         
         data = [ line.rstrip().split(rsep) for line in open(relfile) ]
         dim = len(data[0])
-        
+ 
+        k_columns = []
+        for tp in knn:
+            k, acolumn, bcolumn = tp.split(':')
+            k_columns.append(int(acolumn))
+
         if header:
             header = data[0]
             datamapTrain = datamapTrain[1:]
@@ -154,20 +161,53 @@ class DataConverter:
         self.logger.info("Encode data")
         for idx in range(dim):
             if idx in c_columns:
-                self.encoder.encode_categorical( set(zip(*data)[idx]), msep=msep, label=idx )
-                self.logger.info("label: %s\tlength: %d\tMAX: %d" % (idx, self.encoder.get_label_len(idx), self.encoder.get_max_index()) )
-                continue
+                label = 'Cat ' + str(idx)
+                self.encoder.encode_categorical( set(zip(*data)[idx]), msep=msep, label=label )
+                self.logger.info("label: %s\tlength: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
             elif idx in n_columns:
-                self.encoder.encode_numeric( set(zip(*data)[idx]), label=idx )
-                self.logger.info("label: %s\tlength: %d\tMAX: %d" % (idx, self.encoder.get_label_len(idx), self.encoder.get_max_index()) )
+                label = 'Num ' + str(idx)
+                self.encoder.encode_numeric( set(zip(*data)[idx]), label=label )
+                self.logger.info("label: %s\tlength: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
+
+            if idx in k_columns:
+                label = 'Sim ' + str(idx)
+                self.encoder.encode_categorical( set(zip(*(data))[idx]), msep=msep, label=label )
+                self.logger.info("label: %s\tlength: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
+
+
+        # KNN
+        nn = {}        
+        self.logger.info("Compute Similarity Feature")
+        for tp in knn:
+            tempnn = {}
+            k, acolumn, bcolumn = tp.split(':')
+            k = int(k)
+            acolumn = int(acolumn)
+            bcolumn = int(bcolumn)
+
+            for a in set( list(zip(*(Train))[acolumn]) + list(zip(*(Test))[acolumn]) ):
+                tempnn[a] = []
+            for a, b in zip( list(zip(*(Train))[acolumn]), list(zip(*(Train))[bcolumn]) ):
+                tempnn[a].append(b)
+
+            self.logger.info("Get column %d similarities based on column %d" % (acolumn, bcolumn))
+            nn[acolumn] = self.fmaker.pairwise_similarity(tempnn, topk=k)
+
 
         self.logger.info("Transform data")
         converted = [ ["0" for i in range(len(data))] ]
         for idx in range(dim):
             if idx in c_columns:
-                converted.append( self.encoder.fit_categorical( zip(*data)[idx], msep, label=idx ) )
+                label = 'Cat ' + str(idx)
+                converted.append( self.encoder.fit_categorical( zip(*data)[idx], msep, label=label ) )
             elif idx in n_columns:
-                converted.append( self.encoder.fit_numeric( zip(*data)[idx], label=idx ) )
+                label = 'Num ' + str(idx)
+                converted.append( self.encoder.fit_numeric( zip(*data)[idx], label=label ) )
+            
+            if idx in k_columns:
+                label = 'Sim ' + str(idx)
+                fea_matrix = [ nn[idx][fea] for fea in zip(*data)[idx] ]
+                converted.append( self.encoder.fit_feature( fea_matrix, msep='|', label=label, normalized=normalized ) )
 
         dataout = [ "%s" % (" ".join(cdata)) for cdata in zip(*converted) ]
 

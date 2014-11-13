@@ -102,10 +102,11 @@ def main():
                                      msep=CONFIG.MutiLabelSepartor,
                                      offset=CONFIG.Offset,
                                      header=CONFIG.Header,
-                                     alpha=CONFIG.alpha,
+                                     alpha=CONFIG.Alpha,
                                      normalized=CONFIG.Normalized,
                                      c_columns=CONFIG.CategoricalColumn,
-                                     n_columns=CONFIG.NumericColumn)
+                                     n_columns=CONFIG.NumericColumn,
+                                     knn=CONFIG.KNNColumn)
 
         logger.info("Output result to '%s'" % (CONFIG.OutputFileName[0]))
         file_out = open(CONFIG.OutputFileName[0], 'wb')
@@ -229,11 +230,11 @@ if __name__ == '__main__':
         CONFIG.Offset = 1
 
     if CONFIG.Ratio is not None:
-        CONFIG.Ratio = CONFIG.Ratio.split(',')
+        CONFIG.Ratio = CONFIG.Ratio.split(':')
         logger.info("Ratio: '%s'" % (CONFIG.Ratio))
     else:
-        logger.warning("Default ratio: '0.8,0.2,0.5'")
-        CONFIG.Ratio = '0.8,0.2,0.5'.split(',')
+        logger.warning("Default ratio: '0.8:0.2:0.5'")
+        CONFIG.Ratio = '0.8:0.2:0.5'.split(':')
 
 
     logger.info("Task Start")
