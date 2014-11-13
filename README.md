@@ -1,4 +1,4 @@
-## DataTransform
+## DataTransformer
 A simple tool for data splitting and data transforming. e.g. Converting csv data into [libSVM](http://www.csie.ntu.edu.tw/~cjlin/libsvm/)/[libFM](http://www.libfm.org/) format.
 
 ## Usage
@@ -30,10 +30,10 @@ python main.py --help
 ## Supported Encoding Method
 * `-cat` -- like one-hot encode, usually for categorical feature (supports for multi-labeled features)  
 * `-num` -- directly use the value, usually for numerical data
+* `-sim` -- automatically get similar features as meta features
 
 ## TODO Encoding Method
 * `-wcat` -- encode multi-labeled features with different weights
-* `-sim` -- automatically get similar features as meta features
 
 ## CSV Data -> CSV training data + CSV testing data
 Given an **[InputFile]** csv data:
