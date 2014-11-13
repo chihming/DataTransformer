@@ -39,21 +39,11 @@ PARSER.add_argument('-rsep', "--RSepartor", default=None,
 PARSER.add_argument('-msep', "--MutiLabelSepartor", default=None,
                     help="separtor for splitting multiple-labeled data")
 
-# features
-PARSER.add_argument('-his', "--History", action="store_true",
-                    help="Add history feature.")
-PARSER.add_argument('-usim', "--AddUserSimilarity", action="store_true",
-                    help="Add user similarity feature.")
-PARSER.add_argument('-msim', "--AddMovieSimilarity", action="store_true",
-                    help="Add movie similarity feature.")
-PARSER.add_argument('-genre', "--AddGenres", action="store_true",
-                    help="Add movie genres feature.")
-
 # model parameters
-PARSER.add_argument('-alpha', "--alpha", type=float, default=0.5,
+PARSER.add_argument('-alpha', "--Alpha", type=float, default=0.5,
                     help="Parameter of cosine similarity.")
-PARSER.add_argument('-topk', "--topk", type=int, default=10,
-                    help="Get top-k similarities.")
+PARSER.add_argument('-nor', "--Normalized", type=float, default=0,
+                    help="Parameter of cosine similarity.")
 PARSER.add_argument('-offset', "--Offset", default=None,
                     help="Encoding offset")
 
@@ -90,6 +80,8 @@ def main():
                               msep=CONFIG.MutiLabelSepartor,
                               offset=CONFIG.Offset,
                               header=CONFIG.Header,
+                              alpha=CONFIG.Alpha,
+                              normalized=CONFIG.Normalized,
                               c_columns=CONFIG.CategoricalColumn,
                               n_columns=CONFIG.NumericColumn,
                               knn=CONFIG.KNNColumn)
@@ -110,6 +102,8 @@ def main():
                                      msep=CONFIG.MutiLabelSepartor,
                                      offset=CONFIG.Offset,
                                      header=CONFIG.Header,
+                                     alpha=CONFIG.alpha,
+                                     normalized=CONFIG.Normalized,
                                      c_columns=CONFIG.CategoricalColumn,
                                      n_columns=CONFIG.NumericColumn)
 
@@ -187,6 +181,9 @@ if __name__ == '__main__':
     else:
         logger.warning("Default Header: '0'")
         CONFIG.Header = False
+
+    if CONFIG.Alpha is not None:
+        logger.info("Alpha: '%s'" % (CONFIG.Alpha))
 
     if CONFIG.Separtor is not None:
         logger.info("Separtor: '%s'" % CONFIG.Separtor)

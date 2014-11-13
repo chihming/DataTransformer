@@ -45,7 +45,7 @@ class DataConverter:
 
         return dataoutTrain, dataoutTest
     
-    def CSVtoLib(self, infile, target_column, sep, msep, offset, header, c_columns, n_columns, knn):
+    def CSVtoLib(self, infile, target_column, sep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn):
         """
         Convert CSV data to libSVM/libFM format
         """
@@ -123,13 +123,13 @@ class DataConverter:
                 if idx in k_columns:
                     label = 'Sim ' + str(idx)
                     fea_matrix = [ nn[idx][fea] for fea in zip(*d)[idx] ]
-                    converted[e].append( self.encoder.fit_feature( fea_matrix, msep='|', label=label ) )
+                    converted[e].append( self.encoder.fit_feature( fea_matrix, msep='|', label=label, normalized=normalized ) )
 
             dataout[e] = [ "%s" % (" ".join(cdata)) for cdata in zip(*converted[e]) ]
 
         return dataout
 
-    def CSVtoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, c_columns, n_columns):
+    def CSVtoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, alpha, normalized, c_columns, n_columns):
         """
         Convert data to relational data format
         """

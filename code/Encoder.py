@@ -78,18 +78,26 @@ class Encoder:
         """
         dataout = []
         
-        if msep:
+        if normalized:
+            for fea_vec in fea_matrix:
+                out = []
+                efeas = fea_vec.split(msep)
+                allw = 0.0
+                for efea in efeas:
+                    allw += float(efea.split(':')[1])
+                for efea in efeas:
+                    fea, weight = efea.split(':')
+                    out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], float(weight)/allw) )
+                
+                dataout.append(" ".join(out))
+
+        else:
             for fea_vec in fea_matrix:
                 out = []
                 efeas = fea_vec.split(msep)
                 for efea in efeas:
                     fea, weight = efea.split(':')
                     out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], weight) )
-                dataout.append(" ".join(out))
-        else:
-            for fea_vec in fea_matrix:
-                fea, weight = fea_vec.split(':')
-                out = ["%d:%f" % (self.keymap["%s %s" % (label, fea)], weight)]
                 dataout.append(" ".join(out))
 
         return dataout
