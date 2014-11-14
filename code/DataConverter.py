@@ -11,7 +11,7 @@ class DataConverter:
         self.logger = logger
         pass
 
-    def SplitData(self, infile, target_column, sep, header, ratio):
+    def SplitData(self, infile, target_column, sep, header, ratio, method):
         """
         Split data into training / testinf data
         """
@@ -45,7 +45,7 @@ class DataConverter:
 
         return dataoutTrain, dataoutTest
     
-    def CSVtoLib(self, infile, target_column, sep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn):
+    def DatatoLib(self, infile, target_column, sep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn):
         """
         Convert CSV data to libSVM/libFM format
         """
@@ -129,7 +129,7 @@ class DataConverter:
 
         return dataout
 
-    def CSVtoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn):
+    def DatatoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn):
         """
         Convert data to relational data format
         """

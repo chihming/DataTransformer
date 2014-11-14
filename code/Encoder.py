@@ -93,7 +93,7 @@ class Encoder:
                     fea, weight = efea.split(':')
                     out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], float(weight)/allw) )
                 
-                dataout.append(" ".join(out))
+                dataout.append(" ".join(out).rstrip())
 
         else:
             for fea_vec in fea_matrix:
@@ -106,7 +106,7 @@ class Encoder:
                 for efea in efeas:
                     fea, weight = efea.split(':')
                     out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], weight) )
-                dataout.append(" ".join(out))
+                dataout.append(" ".join(out).rstrip())
 
         return dataout
 
