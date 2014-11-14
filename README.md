@@ -2,15 +2,15 @@
 A simple tool for **Data Splitting** and **Data Encoding**.
 
 ## Usage
-For Data Splitting:
+For **Data Splitting**:
 ```python
 python DataSplit.py -infile [InputFile] -ofile [Outputfile] [Options]
 ```
-For Data Encoding:
+For **Data Encoding**:
 ```python
 python DataEncode.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
 ```
-Since no third-party package is used in this tool, so it supports [pypy](http://pypy.org/) for fast execution.
+Since no third-party package is used in this tool, so it supports [**pypy**](http://pypy.org/) for fast execution.
 ```python
 pypy DataSplit.py -infile [InputFile] -ofile [Outputfile] [Options]
 pypy DataEncode.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
