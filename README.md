@@ -24,9 +24,9 @@ python main.py --help
 * [**File Format**](https://github.com/chihming/DataTransformer/wiki/File-Format)
 
 ## Supported Task
-* [**DataSplit.py**](https://github.com/chihming/DataTransformer/wiki/DataSplit.py)
-* [**data2sparse**](https://github.com/chihming/DataTransformer/wiki/data2sparse) -- convert **general** data into **sparse** data format
-* [**data2rel**](https://github.com/chihming/DataTransformer/wiki/data2rel) -- convert **general** data into **relational** data format
+* [**DataSplit**](https://github.com/chihming/DataTransformer/wiki/DataSplit.py)
+* [**DataEncode - data2sparse**](https://github.com/chihming/DataTransformer/wiki/data2sparse) -- convert **general** data into **sparse** data format
+* [**DataEncode - data2rel**](https://github.com/chihming/DataTransformer/wiki/data2rel) -- convert **general** data into **relational** data format
 
 ## TODO Task
 * **sparse2rel** -- convert **sparse** data into **relational** data format
@@ -38,6 +38,7 @@ python main.py --help
 * `-cat` -- like one-hot encode, usually for categorical feature (supports for multi-labeled features)  
 * `-num` -- directly use the value, usually for numerical data
 * `-sim` -- automatically get similar features as meta features
+
 
 ## TODO Encoding Method
 * `-wcat` -- encode multi-labeled features with different weights
