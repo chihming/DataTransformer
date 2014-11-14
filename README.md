@@ -47,6 +47,6 @@ python main.py --help
 * `-wcat` -- encode multi-labeled features with different weights
 
 ## Demo
-* [**Movielens 1M/10M**]()
+* [**Movielens 1M/10M**](https://github.com/chihming/DataTransformer/wiki/Movielens-Dataset)
 
 
