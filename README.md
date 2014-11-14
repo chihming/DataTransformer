@@ -21,8 +21,8 @@ python main.py --help
 ```
 
 ## Supported Task
-* **data2sparse** -- convert **general** data into **sparse** data format
-* **data2rel** -- convert **general** data into **relational** data format
+* [**data2sparse**](https://github.com/chihming/DataTransformer/wiki/data2sparse) -- convert **general** data into **sparse** data format
+* [**data2rel**](https://github.com/chihming/DataTransformer/wiki/data2rel) -- convert **general** data into **relational** data format
 
 ## TODO Task
 * **sparse2rel** -- convert **sparse** data into **relational** data format
