@@ -24,9 +24,12 @@ python main.py --help
 * [**File Format**](https://github.com/chihming/DataTransformer/wiki/File-Format)
 
 ## Supported Task
-* [**DataSplit**](https://github.com/chihming/DataTransformer/wiki/DataSplit.py)
-* [**DataEncode - data2sparse**](https://github.com/chihming/DataTransformer/wiki/data2sparse) -- convert **general** data into **sparse** data format
-* [**DataEncode - data2rel**](https://github.com/chihming/DataTransformer/wiki/data2rel) -- convert **general** data into **relational** data format
+**DataSplit.py**
+* [**DataSplit.py**](https://github.com/chihming/DataTransformer/wiki/DataSplit.py)
+
+**DataEncode.py**
+* [**data2sparse**](https://github.com/chihming/DataTransformer/wiki/data2sparse) -- convert **general** data into **sparse** data format
+* [**data2rel**](https://github.com/chihming/DataTransformer/wiki/data2rel) -- convert **general** data into **relational** data format
 
 ## TODO Task
 * **sparse2rel** -- convert **sparse** data into **relational** data format
