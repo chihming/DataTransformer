@@ -20,7 +20,11 @@ More parameter options can be found in `--help` or wiki page (not finished for n
 python main.py --help
 ```
 
+## File Format
+* [**File Format**](https://github.com/chihming/DataTransformer/wiki/File-Format)
+
 ## Supported Task
+* [**DataSplit.py**](https://github.com/chihming/DataTransformer/wiki/DataSplit.py)
 * [**data2sparse**](https://github.com/chihming/DataTransformer/wiki/data2sparse) -- convert **general** data into **sparse** data format
 * [**data2rel**](https://github.com/chihming/DataTransformer/wiki/data2rel) -- convert **general** data into **relational** data format
 
