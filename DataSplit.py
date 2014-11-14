@@ -19,8 +19,8 @@ PARSER.add_argument('-outfile', "--OutputFileName", default=None,
 
 PARSER.add_argument('-header', "--Header", type=int, default=None,
                     help="With header or not")
-PARSER.add_argument('-sep', "--Separtor", default=None,
-                    help="separtor for splitting data")
+PARSER.add_argument('-sep', "--Separator", default=None,
+                    help="separator for splitting data")
 
 # model parameters
 PARSER.add_argument('-method', "--Method", default=None,
@@ -42,7 +42,7 @@ def main():
 
     dataout = DC.SplitData(infile=CONFIG.InputFileName,
                            target_column=CONFIG.TargetColumn,
-                           sep=CONFIG.Separtor,
+                           sep=CONFIG.Separator,
                            header=CONFIG.Header,
                            ratio=CONFIG.Ratio,
                            method=CONFIG.Method)

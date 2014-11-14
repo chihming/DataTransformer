@@ -30,12 +30,12 @@ PARSER.add_argument('-relfile', "--RelationalFileName", default=None,
 
 PARSER.add_argument('-header', "--Header", type=int, default=None,
                     help="With header or not")
-PARSER.add_argument('-sep', "--Separtor", default=None,
+PARSER.add_argument('-sep', "--Separator", default=None,
                     help="separtor for splitting data")
-PARSER.add_argument('-rsep', "--RSepartor", default=None,
+PARSER.add_argument('-rsep', "--RSeparator", default=None,
                     help="separtor for splitting relational data")
-PARSER.add_argument('-msep', "--MutiLabelSepartor", default=None,
-                    help="separtor for splitting multiple-labeled data")
+PARSER.add_argument('-msep', "--MutiLabelSeparator", default=None,
+                    help="separator for splitting multiple-labeled data")
 
 # model parameters
 PARSER.add_argument('-alpha', "--Alpha", type=float, default=0.5,
@@ -65,8 +65,8 @@ def main():
     if CONFIG.Task == 'data2sparse':
         dataout = DC.DatatoLib(infile=CONFIG.InputFileName,
                                target_column=CONFIG.TargetColumn,
-                               sep=CONFIG.Separtor,
-                               msep=CONFIG.MutiLabelSepartor,
+                               sep=CONFIG.Separator,
+                               msep=CONFIG.MutiLabelSeparator,
                                offset=CONFIG.Offset,
                                header=CONFIG.Header,
                                alpha=CONFIG.Alpha,
@@ -86,9 +86,9 @@ def main():
                                relfile=CONFIG.RelationalFileName,
                                target_column=CONFIG.TargetColumn,
                                rtarget_column=CONFIG.RTargetColumn,
-                               sep=CONFIG.Separtor,
-                               rsep=CONFIG.RSepartor,
-                               msep=CONFIG.MutiLabelSepartor,
+                               sep=CONFIG.Separator,
+                               rsep=CONFIG.RSeparator,
+                               msep=CONFIG.MutiLabelSeparator,
                                offset=CONFIG.Offset,
                                header=CONFIG.Header,
                                alpha=CONFIG.Alpha,
@@ -195,7 +195,7 @@ if __name__ == '__main__':
         logger.info("Separtor: '%s'" % CONFIG.Separtor)
         if CONFIG.Separtor == "\\t": CONFIG.Separtor = "\t"
     else:
-        logger.error("Please specify the seprator.")
+        logger.error("Please specify the separator.")
         logger.error("e.g. -sep ','")
         exit()
 
