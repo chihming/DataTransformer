@@ -46,13 +46,7 @@ python main.py --help
 ## TODO Encoding Method
 * `-wcat` -- encode multi-labeled features with different weights
 
-## Demo on [Movielens 1M/10M](http://grouplens.org/datasets/movielens/) dataset
-Generate pure **User-Item** matrix in libSVM-like format:
-```python
-python main.py -task 'csv2lib' -infile ml-1m/ratings.dat -outfile [Outputfile] -sep '::' -target 2 -cat 0,1 -header 0
-```
+## Demo
+* [**Movielens 1M/10M**]()
 
-Generate **User-Item-Time** matrix in libSVM-like format:
-```python
-python main.py -task 'csv2lib' -infile ml-1m/ratings.dat -outfile [Outputfile] -sep '::' -target 2 -cat 0,1 -num 2 -header 0
-```
+
