@@ -44,7 +44,7 @@ PARSER.add_argument('-nor', "--Normalized", type=float, default=0,
                     help="Do normalization or not.")
 PARSER.add_argument('-offset', "--Offset", default=None,
                     help="Encoding offset")
-PARSER.add_argument('-group', "--Group", type=float, default=0.5,
+PARSER.add_argument('-group', "--Group", type=float, default=None,
                     help="Grouping number.")
 PARSER.add_argument('-method', "--Method", default=None,
                     help="Split data according to specified method.")
@@ -114,7 +114,7 @@ def main():
 
         if CONFIG.Group is not None:
             logger.info("Output result to '%s'" % (CONFIG.OutputFileName[0]) + '.group')
-            file_out = open(CONFIG.OutputFileName[0] + 'group', 'wb')
+            file_out = open(CONFIG.OutputFileName[0] + '.group', 'wb')
             file_out.write('\n'.join( ["%s" % (CONFIG.Group)]*dataout[-1] ))
             file_out.close()
 
@@ -145,7 +145,7 @@ if __name__ == '__main__':
         logger.error("Options: %s" % task_list)
         exit()
 
-    if CONFIG.Task == 'csv2rel':
+    if CONFIG.Task == 'data2rel':
         if CONFIG.RelationalFileName is not None:
             logger.info("Relational File: '%s'" % CONFIG.RelationalFileName)
         else:
@@ -163,6 +163,11 @@ if __name__ == '__main__':
     if CONFIG.InputFileName is not None:
         CONFIG.InputFileName = CONFIG.InputFileName.split(',')
         logger.info("Input File: %s" % (CONFIG.InputFileName))
+        if CONFIG.Task == 'data2rel':
+            if len(CONFIG.InputFileName) != 2:
+                logger.error("Input Files shall contains one [TrainFile] and one [Testfile].")
+                logger.error("e.g. -infile [TrainFile],[Testfile].")
+                exit()
     else:
         logger.error("Please specify input files splitted by ','")
         logger.error("e.g. -infile [InputFile1],[InputFile2],...")
@@ -170,7 +175,7 @@ if __name__ == '__main__':
 
     if CONFIG.OutputFileName is not None:
         CONFIG.OutputFileName = CONFIG.OutputFileName.split(',')
-        if len(CONFIG.InputFileName) != len(CONFIG.OutputFileName):
+        if len(CONFIG.InputFileName) != len(CONFIG.OutputFileName) and CONFIG.Task == 'data2csv':
             logger.error("Amount of Input files shall be equaled to amount of Ouput files.")
             exit()
         logger.info("Output File: %s" % (CONFIG.OutputFileName))

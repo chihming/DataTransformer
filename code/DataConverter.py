@@ -211,5 +211,5 @@ class DataConverter:
 
         dataout = [ "%s" % (" ".join(cdata)) for cdata in zip(*converted) ]
 
-        return dataout, datamapTrain, datamapTest, self.get_max_index()-1
+        return dataout, datamapTrain, datamapTest, self.encoder.get_max_index()-1
 
