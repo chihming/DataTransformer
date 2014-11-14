@@ -20,17 +20,17 @@ More parameter options can be found in `--help` or wiki page (not finished for n
 python main.py --help
 ```
 
-## DataEncode -- Supported Task
+## Supported Task
 * **data2sparse** -- convert **general** data into **sparse** data format
 * **data2rel** -- convert **general** data into **relational** data format
 
-## DataEncode -- TODO Task
+## TODO Task
 * **sparse2rel** -- convert **sparse** data into **relational** data format
 * **data2vw** -- convert **general** data into [Vowpal Wabbit](https://github.com/JohnLangford/vowpal_wabbit) (VW) data format
 * **sparse2vw** -- convert **sparse**  dataformat into VW format
 * **vw2sparse** -- convert VW dataformat into **sparse**  format
 
-## DataEncode -- Supported Encoding Method
+## Supported Encoding Method
 * `-cat` -- like one-hot encode, usually for categorical feature (supports for multi-labeled features)  
 * `-num` -- directly use the value, usually for numerical data
 * `-sim` -- automatically get similar features as meta features
