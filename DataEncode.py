@@ -5,8 +5,9 @@ from code.DataConverter import DataConverter
 PARSER = argparse.ArgumentParser(description="Parameters for the script.",
                                  usage="python main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]")
 
+task_list = ['data2sparse', 'data2rel']
 PARSER.add_argument('-task', "--Task", default=None,
-                    help="Specify the task. Options: 'csv2lib', 'csv2rel'")
+                    help="Specify the task. Options: %s" % task_list)
 
 # Header for splitting data
 PARSER.add_argument('-target', "--TargetColumn", type=int, default=None,
@@ -132,8 +133,6 @@ if __name__ == '__main__':
 
     logger.info("Arguments Check")
 
-    task_list = ['data2sparse', 'data2rel']
-
     if CONFIG.Task is not None:
         if CONFIG.Task not in task_list:
             logger.error("Unknow Task.")
@@ -191,9 +190,9 @@ if __name__ == '__main__':
         logger.error("e.g. -target 0")
         exit()
 
-    if CONFIG.Separtor is not None:
-        logger.info("Separtor: '%s'" % CONFIG.Separtor)
-        if CONFIG.Separtor == "\\t": CONFIG.Separtor = "\t"
+    if CONFIG.Separator is not None:
+        logger.info("Separator: '%s'" % CONFIG.Separator)
+        if CONFIG.Separator == "\\t": CONFIG.Separator = "\t"
     else:
         logger.error("Please specify the separator.")
         logger.error("e.g. -sep ','")
@@ -208,15 +207,15 @@ if __name__ == '__main__':
     if CONFIG.Alpha is not None:
         logger.info("Alpha: '%s'" % (CONFIG.Alpha))
 
-    if CONFIG.RSepartor is not None:
-        logger.info("Separtor for relation data: '%s'" % CONFIG.RSepartor)
-        if CONFIG.RSepartor == "\\t": CONFIG.RSepartor = "\t"
+    if CONFIG.RSeparator is not None:
+        logger.info("Separator for relation data: '%s'" % CONFIG.RSeparator)
+        if CONFIG.RSeparator == "\\t": CONFIG.RSeparator = "\t"
     else:
-        logger.warning("Set Relational Data Separtor as Separtor '%s'" % CONFIG.Separtor)
-        CONFIG.RSepartor = CONFIG.Separtor
+        logger.warning("Set Relational Data Separator as Separtor '%s'" % CONFIG.Separator)
+        CONFIG.RSeparator = CONFIG.Separator
 
-    if CONFIG.Separtor is not None:
-        logger.info("Multi-labeled Separtor: '%s'" % CONFIG.Separtor)
+    if CONFIG.MutiLabelSeparator is not None:
+        logger.info("Multi-labeled Separtor: '%s'" % CONFIG.MutiLabelSeparator)
     else:
         logger.warning("No multi-labeled data")
 
