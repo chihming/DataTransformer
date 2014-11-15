@@ -11,6 +11,31 @@ class DataConverter:
         self.logger = logger
         pass
 
+    def JoinData(self, infile, relfile, sep, rsep, header, join_column):
+        """
+        Join data features
+        """
+        self.logger.info("Load data")
+        indata = [ line.rstrip().split(sep) for line in open(infile[0]) ]
+        dataout = indata[:]
+        dmap = {}
+
+        for e, columns in enumerate(join_column):
+            self.logger.info("Join columns: %s" % columns)
+            dmap.clear()
+            tcolumn, jcolumn = columns.split(':')
+            tcolumn = int(tcolumn)
+            jcolumn = int(jcolumn)
+            reldata = [ line.rstrip().split(rsep) for line in open(relfile[e]) ]
+            for line in reldata:
+                key = line[jcolumn]
+                del line[jcolumn]
+                dmap[key] = line
+            dataout = [ a + b for a, b in zip( dataout, [dmap[key] for key in zip(*(indata))[tcolumn]] ) ]
+        
+        dataout = [ sep.join(cdata) for cdata in dataout ]
+        return dataout
+
     def SplitData(self, infile, target_column, sep, header, ratio, method):
         """
         Split data into training / testinf data
@@ -91,7 +116,8 @@ class DataConverter:
                     self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
 
         # KNN
-        self.logger.info("Compute Similarity Feature")
+        if knn is not None:
+            self.logger.info("Compute Similarity Feature")
         for tp in knn:
             tempnn = {}
             k, acolumn, bcolumn = tp.split(':')
@@ -115,13 +141,16 @@ class DataConverter:
             for idx in range(len(d[0])):
                 if idx in c_columns:
                     label = 'Cat ' + str(idx)
+                    self.logger.info("Transforming label: %s" % label)
                     converted[e].append( self.encoder.fit_categorical( zip(*d)[idx], msep, label=label ) )
                 elif idx in n_columns:
                     label = 'Num ' + str(idx)
+                    self.logger.info("Transforming label: %s" % label)
                     converted[e].append( self.encoder.fit_numeric( zip(*d)[idx], label=label ) )
 
                 if idx in k_columns:
                     label = 'Sim ' + str(idx)
+                    self.logger.info("Transforming label: %s" % label)
                     fea_matrix = [ nn[idx][fea] if fea in nn[idx] else "" for fea in zip(*d)[idx] ]
                     converted[e].append( self.encoder.fit_feature( fea_matrix, msep='|', label=label, normalized=normalized ) )
 
