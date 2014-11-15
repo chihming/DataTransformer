@@ -2,7 +2,7 @@
 A simple tool for **Data Splitting** and **Data Encoding**.
 
 ## Usage
-For **Data Splitting**:
+For **Data Processing**:
 ```python
 python DataProcess.py -task [Task] -infile [InputFile] -outfile [Outputfile] [Options]
 ```
@@ -25,8 +25,8 @@ python main.py --help
 
 ## Supported Task
 **DataProcess.py**
-* [**dsplit**](https://github.com/chihming/DataTransformer/wiki/DataSplit.py) -- split data into train & test
-* [**djoin**]() -- join relational feature to data
+* [**dsplit**](https://github.com/chihming/DataTransformer/wiki/dsplit) -- split data into train & test
+* [**djoin**](https://github.com/chihming/DataTransformer/wiki/djoin) -- join relational feature to data
 
 **DataEncode.py**
 * [**data2sparse**](https://github.com/chihming/DataTransformer/wiki/data2sparse) -- convert **general** data into **sparse** data format
