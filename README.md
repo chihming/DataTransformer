@@ -4,16 +4,16 @@ A simple tool for **Data Splitting** and **Data Encoding**.
 ## Usage
 For **Data Splitting**:
 ```python
-python DataProcess.py -infile [InputFile] -ofile [Outputfile] [Options]
+python DataProcess.py -task [Task] -infile [InputFile] -outfile [Outputfile] [Options]
 ```
 For **Data Encoding**:
 ```python
-python DataEncode.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
+python DataEncode.py -task [Task] -infile [InputFile] -outfile [Outputfile] [Options]
 ```
 Since no third-party package is used in this tool, so it supports [**pypy**](http://pypy.org/) for fast execution.
 ```python
-pypy DataProcess.py -infile [InputFile] -ofile [Outputfile] [Options]
-pypy DataEncode.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]
+pypy DataProcess.py -task [Task] -infile [InputFile] -outfile [Outputfile] [Options]
+pypy DataEncode.py -task [Task] -infile [InputFile] -outfile [Outputfile] [Options]
 ```
 More parameter options can be found in `--help` or wiki page (not finished for now).
 ```python
