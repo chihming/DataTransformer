@@ -5,7 +5,7 @@ from code.DataConverter import DataConverter
 PARSER = argparse.ArgumentParser(description="Parameters for the script.",
                                  usage="python main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]")
 
-task_list = ['data2sparse', 'data2rel']
+task_list = ['data2sparse', 'data2rel', 'sparse2rel']
 PARSER.add_argument('-task', "--Task", default=None,
                     help="Specify the task. Options: %s" % task_list)
 
@@ -49,6 +49,8 @@ PARSER.add_argument('-group', "--Group", type=float, default=None,
                     help="Grouping number.")
 PARSER.add_argument('-method', "--Method", default=None,
                     help="Split data according to specified method.")
+PARSER.add_argument('-process', "--Process", default=None,
+                    help="Number of Process.")
 
 PARSER.set_defaults(argument_default=False)
 CONFIG = PARSER.parse_args()
@@ -74,7 +76,8 @@ def main():
                                normalized=CONFIG.Normalized,
                                c_columns=CONFIG.CategoricalColumn,
                                n_columns=CONFIG.NumericColumn,
-                               knn=CONFIG.KNNColumn)
+                               knn=CONFIG.KNNColumn,
+                               process=CONFIG.Process)
 
         for e, out in enumerate(dataout):
             logger.info("Output result to '%s'" % (CONFIG.OutputFileName[e]))
@@ -245,6 +248,13 @@ if __name__ == '__main__':
     else:
         logger.info("Offset: '1' (encoding index starts from 1)")
         CONFIG.Offset = 1
+
+    if CONFIG.Process is not None:
+        CONFIG.Process = int(CONFIG.Process)
+        logger.info("Number of Process: '%d'" % (CONFIG.Process))
+    else:
+        logger.info("Number of Process: '1' (encoding index starts from 1)")
+        CONFIG.Process = 1
 
     #if CONFIG.Method is not None:
     #    logger.info("Splitting method: '%s'" % (CONFIG.Method))

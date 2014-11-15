@@ -4,11 +4,12 @@ from random import shuffle
 
 class DataConverter:
     logger = None
+    fmaker = None
     encoder = Encoder()
-    fmaker = FeatureMaker()
 
     def __init__(self, logger):
         self.logger = logger
+        self.fmaker = FeatureMaker(logger)
         pass
 
     def JoinData(self, infile, relfile, sep, rsep, header, join_column):
@@ -57,20 +58,22 @@ class DataConverter:
         dataoutTest = []
         for d in data:
             datamap[d[target_column]].append(d)
-        for target in datamap:
-            if target in target_train:
-                for d in datamap[target]:
-                    dataoutTrain.append(sep.join(d))
-            else:
-                cut_off = int( len(datamap[target]) * float(ratio[2]) )
-                for d in datamap[target][:cut_off]:
-                    dataoutTrain.append(sep.join(d))
-                for d in datamap[target][cut_off:]:
-                    dataoutTest.append(sep.join(d))
+
+        if method == 'random':
+            for target in datamap:
+                if target in target_train:
+                    for d in datamap[target]:
+                        dataoutTrain.append(sep.join(d))
+                else:
+                    cut_off = int( len(datamap[target]) * float(ratio[2]) )
+                    for d in datamap[target][:cut_off]:
+                        dataoutTrain.append(sep.join(d))
+                    for d in datamap[target][cut_off:]:
+                        dataoutTest.append(sep.join(d))
 
         return dataoutTrain, dataoutTest
-    
-    def DatatoLib(self, infile, target_column, sep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn):
+
+    def DatatoLib(self, infile, target_column, sep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn, process):
         """
         Convert CSV data to libSVM/libFM format
         """
@@ -124,6 +127,7 @@ class DataConverter:
             k = int(k)
             acolumn = int(acolumn)
             bcolumn = int(bcolumn)
+            nn[acolumn] = {}
 
             for a in set(list(zip(*(data[0]))[acolumn])):
                 tempnn[a] = []
@@ -131,7 +135,8 @@ class DataConverter:
                 tempnn[a].append(b)
 
             self.logger.info("Get column %d similarities based on column %d" % (acolumn, bcolumn))
-            nn[acolumn] = self.fmaker.pairwise_similarity(tempnn, topk=k)
+
+            nn[acolumn] = self.fmaker.pairwise_similarity(tempnn, k, alpha, process=process)
 
         # Data Transforming
         self.logger.info("Data Transforming")
