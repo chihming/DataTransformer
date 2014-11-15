@@ -96,11 +96,11 @@ if __name__ == '__main__':
         logger.warning("Default Header: '0'")
         CONFIG.Header = False
 
-    if CONFIG.Separtor is not None:
-        logger.info("Separtor: '%s'" % CONFIG.Separtor)
-        if CONFIG.Separtor == "\\t": CONFIG.Separtor = "\t"
+    if CONFIG.Separator is not None:
+        logger.info("Separator: '%s'" % CONFIG.Separator)
+        if CONFIG.Separator == "\\t": CONFIG.Separator = "\t"
     else:
-        logger.error("Please Specify Separtor.")
+        logger.error("Please Specify Separator.")
         logger.error("e.g. -sep ','")
         exit()
 
