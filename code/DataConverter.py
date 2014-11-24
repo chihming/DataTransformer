@@ -163,7 +163,7 @@ class DataConverter:
 
         return dataout
 
-    def DatatoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn):
+    def DatatoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn, process):
         """
         Convert data to relational data format
         """
@@ -183,9 +183,8 @@ class DataConverter:
  
         nn = {}        
         k_columns = []
-        for tp in knn:
-            k, acolumn, bcolumn = tp.split(':')
-            k_columns.append(int(acolumn))
+        if len(knn) > 0:
+            k_columns = [ int(rtarget_column) ]
 
         if header:
             header = data[0]
@@ -205,27 +204,32 @@ class DataConverter:
                 self.logger.info("label: %s\tlength: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
 
             if idx in k_columns:
-                label = 'Sim ' + str(idx)
+                label = 'Sim ' + str(rtarget_column)
                 self.encoder.encode_categorical( set(zip(*(data))[idx]), msep=msep, label=label )
                 self.logger.info("label: %s\tlength: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
 
 
         # KNN
-        self.logger.info("Compute Similarity Feature")
+        if len(knn) > 0:
+            self.logger.info("Compute Similarity Feature")
+
         for tp in knn:
             tempnn = {}
             k, acolumn, bcolumn = tp.split(':')
             k = int(k)
             acolumn = int(acolumn)
             bcolumn = int(bcolumn)
+            nn[rtarget_column] = {}
 
-            for a in set( list(zip(*(Train))[acolumn]) + list(zip(*(Test))[acolumn]) ):
+            for a in set(list(zip(*(Train))[acolumn])):
                 tempnn[a] = []
             for a, b in zip( list(zip(*(Train))[acolumn]), list(zip(*(Train))[bcolumn]) ):
                 tempnn[a].append(b)
 
             self.logger.info("Get column %d similarities based on column %d" % (acolumn, bcolumn))
-            nn[acolumn] = self.fmaker.pairwise_similarity(tempnn, topk=k)
+
+            #nn[acolumn] = self.fmaker.pairwise_similarity(tempnn, k, alpha, process=process)
+            nn[rtarget_column] = self.fmaker.pairwise_similarity(tempnn, k, alpha, process=process)
 
 
         self.logger.info("Transform data")
@@ -239,8 +243,8 @@ class DataConverter:
                 converted.append( self.encoder.fit_numeric( zip(*data)[idx], label=label ) )
             
             if idx in k_columns:
-                label = 'Sim ' + str(idx)
-                fea_matrix = [ nn[idx][fea] if fea in nn[idx] else "" for fea in zip(*d)[idx] ]
+                label = 'Sim ' + str(rtarget_column)
+                fea_matrix = [ nn[idx][fea] if fea in nn[idx] else "" for fea in zip(*data)[idx] ]
                 converted.append( self.encoder.fit_feature( fea_matrix, msep='|', label=label, normalized=normalized ) )
 
         dataout = [ "%s" % (" ".join(cdata)) for cdata in zip(*converted) ]

@@ -3,7 +3,7 @@ from code.DataConverter import DataConverter
 
 # Arguments
 PARSER = argparse.ArgumentParser(description="Parameters for the script.",
-                                 usage="python main.py -task [Task] -infile [InputFile] -ofile [Outputfile] [Options]")
+                                 usage="python main.py -task [Task] -infile [InputFile] -outfile [Outputfile] [Options]")
 
 task_list = ['data2sparse', 'data2rel', 'sparse2rel']
 PARSER.add_argument('-task', "--Task", default=None,
@@ -99,7 +99,8 @@ def main():
                                normalized=CONFIG.Normalized,
                                c_columns=CONFIG.CategoricalColumn,
                                n_columns=CONFIG.NumericColumn,
-                               knn=CONFIG.KNNColumn)
+                               knn=CONFIG.KNNColumn,
+                               process=CONFIG.Process)
 
         logger.info("Output result to '%s'" % (CONFIG.OutputFileName[0]))
         file_out = open(CONFIG.OutputFileName[0], 'wb')
