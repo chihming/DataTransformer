@@ -174,7 +174,11 @@ class DataConverter:
         Test = [ line.rstrip().split(sep) for line in open(infile[0]) ]
         targetTrain = [ line.rstrip().split(sep)[target_column] for line in open(infile[0]) ]
         targetTest = [ line.rstrip().split(sep)[target_column] for line in open(infile[1]) ]
-        keymap = { value:str(idx) for idx, value in enumerate( [line.rstrip().split(rsep)[rtarget_column] for line in open(relfile)] ) }
+        
+        if header:
+            keymap = { value:str(idx) for idx, value in enumerate( [line.rstrip().split(rsep)[rtarget_column] for line in open(relfile)] , -1) }
+        else:
+            keymap = { value:str(idx) for idx, value in enumerate( [line.rstrip().split(rsep)[rtarget_column] for line in open(relfile)] ) }
         datamapTrain = [ keymap[v] for v in targetTrain ]
         datamapTest = [ keymap[v] for v in targetTest ]
         
@@ -189,7 +193,7 @@ class DataConverter:
         if header:
             header = data[0]
             datamapTrain = datamapTrain[1:]
-            datamapTest = datamapTest[2:]
+            datamapTest = datamapTest[1:]
             data = data[1:]
         
         self.logger.info("Encode data")
@@ -212,6 +216,8 @@ class DataConverter:
         # KNN
         if len(knn) > 0:
             self.logger.info("Compute Similarity Feature")
+
+        #Train = [ record for record in Train if float(record[3]) >= 3.]
 
         for tp in knn:
             tempnn = {}

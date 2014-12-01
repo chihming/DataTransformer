@@ -89,9 +89,11 @@ class Encoder:
                 allw = 0.0
                 for efea in efeas:
                     allw += float(efea.split(':')[1])
+                    #allw += 1.
                 for efea in efeas:
                     fea, weight = efea.split(':')
                     out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], float(weight)/allw) )
+                    #out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], 1./allw) )
                 
                 dataout.append(" ".join(out).rstrip())
 

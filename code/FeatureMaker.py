@@ -1,7 +1,7 @@
 import multiprocessing
 from sys import stderr
 
-def parallel_get_similarity(nn, tlist, nlist, alpha_len, topk, threshold=0.1, method='cosine'):
+def parallel_get_similarity(nn, tlist, nlist, alpha_len, topk, threshold=0.2, method='cosine'):
     scores = {}
     sim = {}
     for e, a in enumerate(tlist):
@@ -10,7 +10,7 @@ def parallel_get_similarity(nn, tlist, nlist, alpha_len, topk, threshold=0.1, me
         l1 = alpha_len[0][a]
         for b in nlist:
             if a == b:
-                scores[b] = 0.5
+                scores[b] = 1.
                 continue
             score = len( s1 & nn[b] ) / ( (l1)*(alpha_len[1][b]) )
             if score > threshold:
