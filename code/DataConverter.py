@@ -170,19 +170,21 @@ class DataConverter:
         self.encoder.set_offset(offset)
 
         self.logger.info("Load data")
-        Train = [ line.rstrip().split(sep) for line in open(infile[0]) ]
-        Test = [ line.rstrip().split(sep) for line in open(infile[0]) ]
-        targetTrain = [ line.rstrip().split(sep)[target_column] for line in open(infile[0]) ]
-        targetTest = [ line.rstrip().split(sep)[target_column] for line in open(infile[1]) ]
+        Train = None
+        if len(knn) > 0:
+            Train = [ line.split(sep) for line in open(infile[0]) ]
+        Test = [ line.split(sep) for line in open(infile[0]) ]
+        targetTrain = [ line.rstrip('\n').split(sep)[target_column] for line in open(infile[0]) ]
+        targetTest = [ line.rstrip('\n').split(sep)[target_column] for line in open(infile[1]) ]
         
         if header:
-            keymap = { value:str(idx) for idx, value in enumerate( [line.rstrip().split(rsep)[rtarget_column] for line in open(relfile)] , -1) }
+            keymap = { value:str(idx) for idx, value in enumerate( [line.rstrip('\n').split(rsep)[rtarget_column] for line in open(relfile)] , -1) }
         else:
-            keymap = { value:str(idx) for idx, value in enumerate( [line.rstrip().split(rsep)[rtarget_column] for line in open(relfile)] ) }
-        datamapTrain = [ keymap[v] for v in targetTrain ]
-        datamapTest = [ keymap[v] for v in targetTest ]
-        
-        data = [ line.rstrip().split(rsep) for line in open(relfile) ]
+            keymap = { value:str(idx) for idx, value in enumerate( [line.rstrip('\n').split(rsep)[rtarget_column] for line in open(relfile)] ) }
+        datamapTrain = [ keymap[v] if v in keymap else keymap['-1'] for v in targetTrain ]
+        datamapTest = [ keymap[v] if v in keymap else keymap['-1'] for v in targetTest ]
+
+        data = [ line.rstrip('\n').split(rsep) for line in open(relfile) ] 
         dim = len(data[0])
  
         nn = {}        
