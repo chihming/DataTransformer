@@ -14,6 +14,14 @@ class Encoder:
     def get_label_len(self, label):
         return self.label_len[label]
 
+    def dump_map(self, mfile):
+        out = []
+        for key in self.keymap.keys():
+            out.append("%s %s" % (key, self.keymap[key]))
+        fout = open(mfile, 'w')
+        fout.write("\n".join(out))
+        fout.close()
+
     def encode_categorical(self, fea_vec, msep, label=None, sep=None):
         """
         Encode for categorical features
@@ -47,9 +55,9 @@ class Encoder:
         self.keymap[key] = self.idx
         self.idx += 1
 
-        key = "%s numerical_except" % (label)
-        self.keymap[key] = self.idx
-        self.idx += 1
+        #key = "%s numerical_except" % (label)
+        #self.keymap[key] = self.idx
+        #self.idx += 1
 
         self.label_len[label] = self.idx - idx_init
 
@@ -119,10 +127,10 @@ class Encoder:
         dataout = []
 
         for value in fea_matrix:
-            if value.isdigit():
-                dataout.append( "%s:%f" % (self.keymap["%s numerical" % (label)], float(value)) )
-            else:
-                dataout.append( "%s:1" % (self.keymap["%s numerical_except" % (label)]) )
+            #if value.isdigit():
+            dataout.append( "%s:%f" % (self.keymap["%s numerical" % (label)], float(value)) )
+            #else:
+            #    dataout.append( "%s:1" % (self.keymap["%s numerical_except" % (label)]) )
 
         return dataout
 

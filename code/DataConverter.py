@@ -7,6 +7,9 @@ class DataConverter:
     fmaker = None
     encoder = Encoder()
 
+    def DumpMapping(self, mfile):
+        self.encoder.dump_map(mfile)
+
     def __init__(self, logger):
         self.logger = logger
         self.fmaker = FeatureMaker(logger)
@@ -59,13 +62,23 @@ class DataConverter:
         for d in data:
             datamap[d[target_column]].append(d)
 
+        # FIXME filter data
+        thres = 10
+        #for target in datamap:
+        #    thres += len(datamap[target])
+        #thres = thres/len(datamap)/2
+        self.logger.info("filter data less than %d" % thres)
+
         if method == 'random':
             for target in datamap:
+                
+                if len(datamap[target]) < thres: continue
+
                 if target in target_train:
                     for d in datamap[target]:
                         dataoutTrain.append(sep.join(d))
                 else:
-                    cut_off = int( len(datamap[target]) * float(ratio[2]) )
+                    cut_off = int( round( len(datamap[target]) * float(ratio[2]), 0) )
                     for d in datamap[target][:cut_off]:
                         dataoutTrain.append(sep.join(d))
                     for d in datamap[target][cut_off:]:
