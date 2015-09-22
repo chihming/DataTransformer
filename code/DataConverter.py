@@ -39,7 +39,7 @@ class DataConverter:
 
     def SplitData(self, infile, target_column, sep, header, ratio, method):
         """
-        Split data into training / testinf data
+        Split data into training / testing data
         """
         self.logger.info("Load data")
         data = [ line.rstrip().split(sep) for line in open(infile[0]) ]
@@ -58,17 +58,24 @@ class DataConverter:
         dataoutTest = []
         for d in data:
             datamap[d[target_column]].append(d)
+        
+        thres = 10
 
-        if method == 'random':
+        if method == 'random': #FIXME not random?
             for target in datamap:
+
+                if len(datamap[target]) < thres: continue
+
                 if target in target_train:
                     for d in datamap[target]:
                         dataoutTrain.append(sep.join(d))
                 else:
                     cut_off = int( len(datamap[target]) * float(ratio[2]) )
-                    for d in datamap[target][:cut_off]:
+                    _datamap = datamap[target][:]
+                    shuffle(_datamap)
+                    for d in _datamap[:cut_off]:
                         dataoutTrain.append(sep.join(d))
-                    for d in datamap[target][cut_off:]:
+                    for d in _datamap[cut_off:]:
                         dataoutTest.append(sep.join(d))
 
         return dataoutTrain, dataoutTest

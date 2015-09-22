@@ -28,6 +28,8 @@ PARSER.add_argument('-outfile', "--OutputFileName", default=None,
                     help="Output File Name")
 PARSER.add_argument('-relfile', "--RelationalFileName", default=None,
                     help="Relational File Name")
+PARSER.add_argument('-mfile', "--MappingFileName", default=None,
+                    help="Mapping File Name")
 
 PARSER.add_argument('-header', "--Header", type=int, default=None,
                     help="With header or not")
@@ -117,6 +119,10 @@ def main():
         file_out.write('\n'.join(dataout[2]))
         file_out.close()
 
+        if CONFIG.MappingFileName is not None:
+            logger.info("Output mapping to '%s'" % (CONFIG.MappingFileName))
+            DC.DumpMapping(CONFIG.MappingFileName)
+
         if CONFIG.Group is not None:
             logger.info("Output result to '%s'" % (CONFIG.OutputFileName[0]) + '.group')
             file_out = open(CONFIG.OutputFileName[0] + '.group', 'wb')
@@ -186,6 +192,9 @@ if __name__ == '__main__':
         logger.error("Please specify output files splitted by ','")
         logger.error("e.g. -outfile [OutputFile1],[OutputFile2],...")
         exit()
+
+    if CONFIG.MappingFileName is not None:
+        logger.info("Mapping File: %s" % (CONFIG.MappingFileName))
 
     if CONFIG.TargetColumn is not None:
         logger.info("Target Column: '%d'" % (CONFIG.TargetColumn))
