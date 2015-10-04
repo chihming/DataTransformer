@@ -1,6 +1,7 @@
 from code.FeatureMaker import FeatureMaker
 from code.Encoder import Encoder
 from random import shuffle
+from collections import defaultdict
 
 class DataConverter:
     logger = None
@@ -44,23 +45,30 @@ class DataConverter:
         """
         Split data into training / testing data
         """
-        self.logger.info("Load data")
-        data = [ line.rstrip().split(sep) for line in open(infile[0]) ]
-
+        self.logger.info("Get unique targets")
+        target_unique = {}
+        with open(infile[0]) as f:
+            for line in f:
+                target = line.rstrip().split(sep)[target_column]
+                target_unique[target] = 1
+        target_unique = target_unique.keys()[:]
+        
         self.logger.info("split target")
-        target_unique = list( set(zip(*(data))[target_column]) )
         shuffle(target_unique)
         cut_off = int( len(target_unique) * float(ratio[0]) )
         target_train = { t:1 for t in target_unique[:cut_off] }
+
         #target_test = { t:1 for t in target_unique[cut_off:] }
-        self.logger.info("total targets: %d, train targets: %d" % (len(target_unique), len(target_unique) * float(ratio[0])))
+        self.logger.info("total targets: %d, pure train targets: %d" % (len(target_unique), len(target_unique) * float(ratio[0])))
 
         self.logger.info("split data")
-        datamap = { target:[] for target in target_unique }
+        datamap = defaultdict(list)
         dataoutTrain = []
         dataoutTest = []
-        for d in data:
-            datamap[d[target_column]].append(d)
+        with open(infile[0]) as f:
+            for line in f:
+                target = line.rstrip().split(sep)[target_column]
+                datamap[target].append(line.rstrip())
         
         thres = 10
 
@@ -71,16 +79,16 @@ class DataConverter:
                 if len(datamap[target]) < thres: continue
 
                 if target in target_train:
-                    for d in datamap[target]:
-                        dataoutTrain.append(sep.join(d))
+                    for log in datamap[target]:
+                        dataoutTrain.append(log)
                 else:
                     cut_off = int( round( len(datamap[target]) * float(ratio[2]), 0) )
                     _datamap = datamap[target][:]
                     shuffle(_datamap)
-                    for d in _datamap[:cut_off]:
-                        dataoutTrain.append(sep.join(d))
-                    for d in _datamap[cut_off:]:
-                        dataoutTest.append(sep.join(d))
+                    for log in _datamap[:cut_off]:
+                        dataoutTrain.append(log)
+                    for log in _datamap[cut_off:]:
+                        dataoutTest.append(log)
 
         return dataoutTrain, dataoutTest
 
