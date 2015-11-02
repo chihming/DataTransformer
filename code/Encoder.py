@@ -61,76 +61,57 @@ class Encoder:
 
         self.label_len[label] = self.idx - idx_init
 
-    def fit_categorical(self, fea_matrix, msep, label=None, sep=None):
+    def fit_categorical(self, fea_vec, msep, label=None, sep=None):
         """
         transform categorical data to encoded index
         """
         dataout = []
         
         if msep:
-            for fea_vec in fea_matrix:
-                feas = fea_vec.split(msep)
-                weight = 1./len(feas)
-                out = ["%d:%f" % (self.keymap["%s %s" % (label, fea)], weight) for fea in feas]
-                dataout.append(" ".join(out))
+            feas = fea_vec.split(msep)
+            weight = 1./len(feas)
+            return " ".join( ["%d:%f" % (self.keymap["%s %s" % (label, fea)], weight) for fea in feas] )
         else:
-            for fea_vec in fea_matrix:
-                out = ["%d:1" % (self.keymap["%s %s" % (label, fea_vec)])]
-                dataout.append(" ".join(out))
+            return "%d:1" % (self.keymap["%s %s" % (label, fea_vec)])
 
-        return dataout
-
-    def fit_feature(self, fea_matrix, normalized=False, msep=None, label=None, sep=None):
+    def fit_feature(self, fea_vec, normalized=False, msep=None, label=None, sep=None):
         """
         transform extracted feature to encoded index
         """
         dataout = []
         
         if normalized:
-            for fea_vec in fea_matrix:
-                if fea_vec == '':
-                    dataout.append("")
-                    continue
+            if fea_vec == '': return ""
 
-                out = []
-                efeas = fea_vec.split(msep)
-                allw = 0.0
-                for efea in efeas:
-                    allw += float(efea.split(':')[1])
-                    #allw += 1.
-                for efea in efeas:
-                    fea, weight = efea.split(':')
-                    out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], float(weight)/allw) )
-                    #out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], 1./allw) )
-                
-                dataout.append(" ".join(out).rstrip())
+            out = []
+            efeas = fea_vec.split(msep)
+            allw = 0.0
+            for efea in efeas:
+                allw += float(efea.split(':')[1])
+                #allw += 1.
+            for efea in efeas:
+                fea, weight = efea.split(':')
+                out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], float(weight)/allw) )
+                #out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], 1./allw) )
+            return " ".join(out).rstrip()
 
         else:
-            for fea_vec in fea_matrix:
-                if fea_vec == '':
-                    dataout.append("")
-                    continue
+            if fea_vec == '': return ""
+            
+            out = []
+            efeas = fea_vec.split(msep)
+            for efea in efeas:
+                fea, weight = efea.split(':')
+                out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], weight) )
+            return " ".join(out).rstrip()
 
-                out = []
-                efeas = fea_vec.split(msep)
-                for efea in efeas:
-                    fea, weight = efea.split(':')
-                    out.append( "%d:%s" % (self.keymap["%s %s" % (label, fea)], weight) )
-                dataout.append(" ".join(out).rstrip())
 
-        return dataout
-
-    def fit_numeric(self, fea_matrix, label=None):
+    def fit_numeric(self, fea_vec, label=None):
         """
         transform numeric data to encoded index
         """
-        dataout = []
-
-        for value in fea_matrix:
-            #if value.isdigit():
-            dataout.append( "%s:%f" % (self.keymap["%s numerical" % (label)], float(value)) )
-            #else:
-            #    dataout.append( "%s:1" % (self.keymap["%s numerical_except" % (label)]) )
-
-        return dataout
+        #if value.isdigit():
+        return "%s:%f" % (self.keymap["%s numerical" % (label)], float(value))
+        #else:
+        #    dataout.append( "%s:1" % (self.keymap["%s numerical_except" % (label)]) )
 

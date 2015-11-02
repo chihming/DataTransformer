@@ -68,24 +68,19 @@ def main():
     DC = DataConverter(logger)
 
     if CONFIG.Task == 'data2sparse':
-        dataout = DC.DatatoLib(infile=CONFIG.InputFileName,
-                               target_column=CONFIG.TargetColumn,
-                               sep=CONFIG.Separator,
-                               msep=CONFIG.MutiLabelSeparator,
-                               offset=CONFIG.Offset,
-                               header=CONFIG.Header,
-                               alpha=CONFIG.Alpha,
-                               normalized=CONFIG.Normalized,
-                               c_columns=CONFIG.CategoricalColumn,
-                               n_columns=CONFIG.NumericColumn,
-                               knn=CONFIG.KNNColumn,
-                               process=CONFIG.Process)
-
-        for e, out in enumerate(dataout):
-            logger.info("Output result to '%s'" % (CONFIG.OutputFileName[e]))
-            file_out = open(CONFIG.OutputFileName[e], 'wb')
-            file_out.write('\n'.join(out))
-            file_out.close()
+        DC.DatatoLib(infile=CONFIG.InputFileName,
+                     outfile=CONFIG.OutputFileName,
+                     target_column=CONFIG.TargetColumn,
+                     sep=CONFIG.Separator,
+                     msep=CONFIG.MutiLabelSeparator,
+                     offset=CONFIG.Offset,
+                     header=CONFIG.Header,
+                     alpha=CONFIG.Alpha,
+                     normalized=CONFIG.Normalized,
+                     c_columns=CONFIG.CategoricalColumn,
+                     n_columns=CONFIG.NumericColumn,
+                     knn=CONFIG.KNNColumn,
+                     process=CONFIG.Process)
 
     elif CONFIG.Task == 'data2rel':
         dataout = DC.DatatoRel(infile=CONFIG.InputFileName,

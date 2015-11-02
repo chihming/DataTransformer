@@ -92,95 +92,108 @@ class DataConverter:
 
         return dataoutTrain, dataoutTest
 
-    def DatatoLib(self, infile, target_column, sep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn, process):
+    def DatatoLib(self, infile, outfile, target_column, sep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn, process):
         """
         Convert CSV data to libSVM/libFM format
         """
         self.logger.info("Load data")
         self.encoder.set_offset(offset)
 
-        target = [[] for i in range(len(infile))]
-        converted = [[] for i in range(len(infile))]
         data = []
-        nn = {}        
-        for fname in infile:
-            data.append( [ line.rstrip().split(sep) for line in open(fname) ] )
-        
-        if header:
-            for i in range(len(data)):
-                data[i] = data[i][1:]
-        
-        self.logger.info("Encode data")
 
         k_columns = []
         for tp in knn:
             k, acolumn, bcolumn = tp.split(':')
             k_columns.append(int(acolumn))
+        all_columns = c_columns + n_columns + k_columns
 
-        # Cat, Num
-        for e, d in enumerate(data):
-            for idx in range(len(d[0])):
-                if idx == target_column:
-                    target[e] = list(zip(*(d))[idx])
-                    continue
-                elif idx in c_columns:
-                    label = 'Cat ' + str(idx)
-                    self.encoder.encode_categorical( set(zip(*(d))[idx]), msep=msep, label=label )
-                    self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
-                elif idx in n_columns:
-                    label = 'Num ' + str(idx)
-                    self.encoder.encode_numeric( set(zip(*(d))[idx]), label=label )
-                    self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
+        unique_fea = {}
+        for idx in c_columns: unique_fea[idx] = {}
+        for idx in n_columns: unique_fea[idx] = {}
+        for idx in k_columns: unique_fea[idx] = {}
 
-                if idx in k_columns:
-                    label = 'Sim ' + str(idx)
-                    self.encoder.encode_categorical( set(zip(*(d))[idx]), msep=msep, label=label )
-                    self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
+        for fname in infile:
+            self.logger.info("Get unique feature from '%s'" % (fname))
+            with open(fname, 'r') as f:
+                if header: next(f)
+
+                for line in f:
+                    line = line.rstrip('\n').split(sep)
+                    for idx in all_columns:
+                        unique_fea[idx][line[idx]] = 1
+        
+        self.logger.info("Encode data")
+        for idx in c_columns:
+            label = 'Cat ' + str(idx)
+            self.encoder.encode_categorical( unique_fea[idx].keys(), msep=msep, label=label )
+            self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
+        for idx in n_columns:
+            label = 'Num ' + str(idx)
+            self.encoder.encode_categorical( unique_fea[idx].keys(), msep=msep, label=label )
+            self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
+        for idx in k_columns:
+            label = 'Sim ' + str(idx)
+            self.encoder.encode_categorical( unique_fea[idx].keys(), msep=msep, label=label )
+            self.logger.info("label: %s\tnew labels: %d\tMAX: %d" % (label, self.encoder.get_label_len(label), self.encoder.get_max_index()) )
 
         # KNN
+        nn = {}
         if knn is not None:
             self.logger.info("Compute Similarity Feature")
-        for tp in knn:
-            tempnn = {}
-            k, acolumn, bcolumn = tp.split(':')
-            k = int(k)
-            acolumn = int(acolumn)
-            bcolumn = int(bcolumn)
-            nn[acolumn] = {}
 
-            for a in set(list(zip(*(data[0]))[acolumn])):
-                tempnn[a] = []
-            for a, b in zip( list(zip(*(data[0]))[acolumn]), list(zip(*(data[0]))[bcolumn]) ):
-                tempnn[a].append(b)
+            for tp in knn:
+                tempnn = {}
+                k, acolumn, bcolumn = map(int, tp.split(':'))
+                nn[acolumn] = {}
 
-            self.logger.info("Get column %d similarities based on column %d" % (acolumn, bcolumn))
+                for a in unique_fea[acolumn].keys():
+                    tempnn[a] = []
 
-            nn[acolumn] = self.fmaker.pairwise_similarity(tempnn, k, alpha, process=process)
+                with open(infile[0]) as f:
+                    if header: next(f)
+                    for line in f:
+                        line = line.rstrip().split(sep)
+                        tempnn[ line[acolumn] ].append(line[bcolumn])
+
+                self.logger.info("Get column %d similarities based on column %d" % (acolumn, bcolumn))
+                nn[acolumn] = self.fmaker.pairwise_similarity(tempnn, k, alpha, process=process)
 
         # Data Transforming
-        self.logger.info("Data Transforming")
-        dataout = [[] for i in range(len(infile))]
-        for e, d in enumerate(data):
-            converted[e].append(target[e])
-            for idx in range(len(d[0])):
-                if idx in c_columns:
-                    label = 'Cat ' + str(idx)
-                    self.logger.info("Transforming label: %s" % label)
-                    converted[e].append( self.encoder.fit_categorical( zip(*d)[idx], msep, label=label ) )
-                elif idx in n_columns:
-                    label = 'Num ' + str(idx)
-                    self.logger.info("Transforming label: %s" % label)
-                    converted[e].append( self.encoder.fit_numeric( zip(*d)[idx], label=label ) )
+        converted = []
+        dataout = []
 
-                if idx in k_columns:
-                    label = 'Sim ' + str(idx)
-                    self.logger.info("Transforming label: %s" % label)
-                    fea_matrix = [ nn[idx][fea] if fea in nn[idx] else "" for fea in zip(*d)[idx] ]
-                    converted[e].append( self.encoder.fit_feature( fea_matrix, msep='|', label=label, normalized=normalized ) )
+        out = []
+        for ifname, ofname in zip(infile, outfile):
+            self.logger.info("Data Transforming on '%s' to '%s'" % (ifname, ofname))
+            
+            del converted[:]
+            with open(ifname, 'r') as f:
+                if header: next(f)
+                
+                for line in f:
+                    del out[:]
+                    line = line.rstrip('\n').split(sep)
 
-            dataout[e] = [ "%s" % (" ".join(cdata)) for cdata in zip(*converted[e]) ]
+                    out.append(line[target_column])
 
-        return dataout
+                    for idx in c_columns:
+                        label = 'Cat ' + str(idx)
+                        out.append( self.encoder.fit_categorical( line[idx], msep, label=label ) )
+
+                    for idx in n_columns:
+                        label = 'Num ' + str(idx)
+                        out.append( self.encoder.fit_numeric( line[idx], label=label ) )
+
+                    for idx in k_columns:
+                        label = 'Sim ' + str(idx)
+                        fea_vec = nn[idx][line[idx]] if line[idx] in nn[idx] else ""
+                        out.append( self.encoder.fit_feature( fea_vec, msep='|', label=label, normalized=normalized ) )
+                    
+                    converted.append("%s" % (" ".join(out)))
+
+            self.logger.info("Write encoded data to '%s'" % (ofname))
+            with open(ofname, 'w') as f:
+                f.write("%s\n" % ("\n".join(converted)))
 
     def DatatoRel(self, infile, relfile, target_column, rtarget_column, sep, rsep, msep, offset, header, alpha, normalized, c_columns, n_columns, knn, process):
         """
