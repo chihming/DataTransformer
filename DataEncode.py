@@ -114,15 +114,16 @@ def main():
         file_out.write('\n'.join(dataout[2]))
         file_out.close()
 
-        if CONFIG.MappingFileName is not None:
-            logger.info("Output mapping to '%s'" % (CONFIG.MappingFileName))
-            DC.DumpMapping(CONFIG.MappingFileName)
-
         if CONFIG.Group is not None:
             logger.info("Output result to '%s'" % (CONFIG.OutputFileName[0]) + '.group')
             file_out = open(CONFIG.OutputFileName[0] + '.group', 'wb')
             file_out.write('\n'.join( ["%s" % (CONFIG.Group)]*dataout[-1] ))
             file_out.close()
+
+    if CONFIG.MappingFileName is not None:
+        logger.info("Output mapping to '%s'" % (CONFIG.MappingFileName))
+        DC.DumpMapping(CONFIG.MappingFileName)
+
 
     else:
         logger.error("Unknow Task")
