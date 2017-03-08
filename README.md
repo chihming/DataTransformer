@@ -1,3 +1,4 @@
+(This project is not maintained.)
 ## DataTransformer
 A simple tool for **Data Splitting** and **Data Encoding**.
 
